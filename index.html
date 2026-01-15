@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempo & Foco</title>
+    <style>
+        :root {
+            --bg-page: #FDFBF7;
+            --bg-card: #FFFFFF;
+            --text-title: #4A3F35;
+            --text-body: #6B5E53;
+            --accent-mint: #D4E9E2;
+            --accent-mint-dark: #A8D5BA;
+            --accent-peach: #F9E2D2;
+            --border-color: #E8E2D9;
+            --danger: #FFBABD;
+            --success-gold: #FFD700;
+            --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 4px rgba(0, 0, 0, 0.02);
+            --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .header-container { text-align: center; margin-bottom: 40px; }
+        .app-title { font-size: 32px; font-weight: 300; color: var(--text-title); letter-spacing: 4px; margin: 0; text-transform: uppercase; }
+        .app-title span { font-weight: 800; color: var(--accent-mint-dark); }
+
+        .main-timer {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 40px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        #current-task-display { font-size: 13px; font-weight: 700; color: var(--accent-mint-dark); text-transform: uppercase; letter-spacing: 2px; }
+        #display { font-size: 72px; font-weight: 200; color: var(--text-title); margin: 20px 0; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+
+        .btn-group { display: flex; gap: 15px; justify-content: center; align-items: center; }
+        .icon-btn { width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .icon-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
+        .btn-play { background: var(--accent-mint); color: #2D4A3E; }
+        .btn-pause { background: var(--accent-peach); color: #6E4B31; }
+        .btn-reset { background: transparent; color: #A0968D; border: 1px solid var(--border-color); font-size: 22px; }
+
+        .creation-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .input-row { display: grid; grid-template-columns: 2fr 1fr 54px; gap: 12px; align-items: end; }
+        @media (max-width: 500px) { .input-row { grid-template-columns: 1fr; } .btn-add-plus { width: 100%; } }
+
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 11px; font-weight: 800; color: #A0968D; text-transform: uppercase; }
+        input { border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; outline: none; background: #FAFAFA; font-size: 14px; }
+
+        .btn-add-plus { height: 45px; background: var(--accent-mint); color: #2D4A3E; border: none; border-radius: 12px; font-size: 24px; cursor: pointer; transition: 0.2s; }
+        .btn-add-plus:hover { background: var(--accent-mint-dark); transform: translateY(-2px); }
+
+        .tasks-container { width: 100%; max-width: 480px; }
+        .task-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: var(--shadow-soft);
+        }
+        .task-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+        .task-card.active { border: 2px solid var(--accent-mint-dark); background: #F9FEFC; }
+        .task-card.completed { border: 2px solid var(--success-gold); }
+
+        .btn-delete { position: absolute; top: 15px; right: 15px; background: #fdf2f2; color: #e57373; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+
+        .progress-bg { height: 6px; background: #F0F0F0; border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent-mint-dark); transition: width 0.6s ease; }
+        .completed .progress-fill { background: var(--success-gold); }
+
+        .task-meta { display: flex; justify-content: space-between; font-size: 12px; font-weight: 500; color: #A0968D; }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <h1 class="app-title">Tempo <span>&</span> Foco</h1>
+    </div>
+
+    <div class="main-timer">
+        <span id="current-task-display">Defina seu foco</span>
+        <div id="display">00:00:00</div>
+        <div class="btn-group">
+            <button class="icon-btn btn-reset" onclick="reset()" title="Resetar">⟲</button>
+            <button class="icon-btn btn-play" onclick="start()" title="Iniciar">▶</button>
+            <button class="icon-btn btn-pause" onclick="pause()" title="Pausar">❙❙</button>
+        </div>
+    </div>
+
+    <div class="creation-container">
+        <div class="input-row">
+            <div class="input-group">
+                <label>Matéria / Projeto</label>
+                <input type="text" id="task-name" placeholder="Ex: Direito">
+            </div>
+            <div class="input-group">
+                <label>Meta (min)</label>
+                <input type="number" id="task-goal" placeholder="60">
+            </div>
+            <button class="btn-add-plus" onclick="createTask()">+</button>
+        </div>
+    </div>
+
+    <div id="task-list" class="tasks-container"></div>
+
+    <script>
+        let timer;
+        let seconds = 0;
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let activeTaskId = null;
+
+        // Carregar dados iniciais
+        renderTasks();
+
+        function save() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function formatTime(s) {
+            const h = Math.floor(s / 3600);
+            const m = Math.floor((s % 3600) / 60);
+            const sec = s % 60;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+        }
+
+        function createTask() {
+            const name = document.getElementById('task-name').value;
+            const goal = document.getElementById('task-goal').value;
+            if (!name || !goal) return;
+            const newTask = { id: Date.now(), name, goalSeconds: goal * 60, elapsedSeconds: 0 };
+            tasks.push(newTask);
+            document.getElementById('task-name').value = '';
+            document.getElementById('task-goal').value = '';
+            save();
+            renderTasks();
+        }
+
+        function deleteTask(e, id) {
+            e.stopPropagation();
+            if (activeTaskId === id) { pause(); activeTaskId = null; seconds = 0; document.getElementById('current-task-display').innerText = "Defina seu foco"; updateDisplay(); }
+            tasks = tasks.filter(t => t.id !== id);
+            save();
+            renderTasks();
+        }
+
+        function selectTask(id) {
+            if (timer) pause();
+            activeTaskId = id;
+            const task = tasks.find(t => t.id === id);
+            seconds = task.elapsedSeconds;
+            document.getElementById('current-task-display').innerText = task.name;
+            updateDisplay();
+            renderTasks();
+        }
+
+        function updateDisplay() {
+            const ts = formatTime(seconds);
+            document.getElementById('display').innerText = ts;
+            document.title = ts;
+            if (activeTaskId) {
+                const task = tasks.find(t => t.id === activeTaskId);
+                task.elapsedSeconds = seconds;
+                save(); // Salva o tempo a cada segundo
+                renderTasks();
+            }
+        }
+
+        function start() {
+            if (!activeTaskId) { alert("Selecione um módulo abaixo."); return; }
+            if (!timer) { timer = setInterval(() => { seconds++; updateDisplay(); }, 1000); }
+        }
+
+        function pause() { clearInterval(timer); timer = null; }
+
+        function reset() {
+            if (!activeTaskId) return;
+            if (confirm("Resetar tempo da sessão?")) { 
+                pause(); 
+                seconds = 0; 
+                const task = tasks.find(t => t.id === activeTaskId);
+                task.elapsedSeconds = 0;
+                save();
+                updateDisplay(); 
+            }
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('task-list');
+            list.innerHTML = '';
+            tasks.forEach(task => {
+                const progressNum = (task.elapsedSeconds / task.goalSeconds) * 100;
+                const progress = Math.min(progressNum, 100).toFixed(0);
+                const isActive = task.id === activeTaskId;
+                const isCompleted = progressNum >= 100;
+
+                list.innerHTML += `
+                    <div class="task-card ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" onclick="selectTask(${task.id})">
+                        <button class="btn-delete" onclick="deleteTask(event, ${task.id})">✕</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 30px;">
+                            <strong style="color: var(--text-title);">${task.name}</strong>
+                            <span style="color: ${isCompleted ? 'var(--success-gold)' : 'var(--accent-mint-dark)'}; font-weight: 800; font-size: 13px;">${progress}%</span>
+                        </div>
+                        <div class="progress-bg"><div class="progress-fill" style="width: ${progress}%"></div></div>
+                        <div class="task-meta">
+                            <span>Meta: ${task.goalSeconds / 60}m</span>
+                            <span>Total: ${formatTime(task.elapsedSeconds)}</span>
+                        </div>
+                    </div>`;
+            });
+        }
+    </script>
+</body>
+</html>
