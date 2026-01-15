@@ -29,80 +29,106 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px; /* Reduzi o padding lateral para o mobile */
         }
 
-        .header-container { text-align: center; margin-bottom: 40px; }
-        .app-title { font-size: 32px; font-weight: 300; color: var(--text-title); letter-spacing: 4px; margin: 0; text-transform: uppercase; }
+        .header-container { text-align: center; margin-bottom: 30px; margin-top: 20px; }
+        .app-title { font-size: 24px; font-weight: 300; color: var(--text-title); letter-spacing: 3px; margin: 0; text-transform: uppercase; }
         .app-title span { font-weight: 800; color: var(--accent-mint-dark); }
 
+        /* Timer Principal Adaptável */
         .main-timer {
             background: var(--bg-card);
-            padding: 40px;
-            border-radius: 40px;
+            padding: 30px 20px;
+            border-radius: 30px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
             width: 100%;
             max-width: 480px;
             text-align: center;
-            margin-bottom: 30px;
-            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            box-sizing: border-box;
         }
 
-        #current-task-display { font-size: 13px; font-weight: 700; color: var(--accent-mint-dark); text-transform: uppercase; letter-spacing: 2px; }
-        #display { font-size: 72px; font-weight: 200; color: var(--text-title); margin: 20px 0; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+        #current-task-display { font-size: 11px; font-weight: 700; color: var(--accent-mint-dark); text-transform: uppercase; letter-spacing: 1.5px; }
+        
+        /* Ajuste do tamanho da fonte para não quebrar no celular */
+        #display { 
+            font-size: 18vw; /* Fonte fluida baseada na largura da tela */
+            max-font-size: 72px; 
+            font-weight: 200; 
+            color: var(--text-title); 
+            margin: 15px 0; 
+            font-family: 'JetBrains Mono', monospace; 
+            font-variant-numeric: tabular-nums; 
+        }
 
-        .btn-group { display: flex; gap: 15px; justify-content: center; align-items: center; }
-        .icon-btn { width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .icon-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
-        .btn-play { background: var(--accent-mint); color: #2D4A3E; }
-        .btn-pause { background: var(--accent-peach); color: #6E4B31; }
-        .btn-reset { background: transparent; color: #A0968D; border: 1px solid var(--border-color); font-size: 22px; }
+        /* No Desktop, limita o tamanho da fonte */
+        @media (min-width: 500px) {
+            #display { font-size: 72px; }
+            .app-title { font-size: 32px; }
+        }
 
+        .btn-group { display: flex; gap: 12px; justify-content: center; align-items: center; }
+        .icon-btn { width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+        /* Seção de Criação Responsiva */
         .creation-container {
             width: 100%;
             max-width: 480px;
             background: var(--bg-card);
-            padding: 25px;
-            border-radius: 25px;
+            padding: 20px;
+            border-radius: 20px;
             border: 1px solid var(--border-color);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             box-shadow: var(--shadow-soft);
+            box-sizing: border-box;
         }
 
-        .input-row { display: grid; grid-template-columns: 2fr 1fr 54px; gap: 12px; align-items: end; }
-        @media (max-width: 500px) { .input-row { grid-template-columns: 1fr; } .btn-add-plus { width: 100%; } }
+        .input-row { 
+            display: flex; 
+            flex-direction: column; /* Padrão Mobile: Um embaixo do outro */
+            gap: 15px; 
+        }
 
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-size: 11px; font-weight: 800; color: #A0968D; text-transform: uppercase; }
-        input { border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; outline: none; background: #FAFAFA; font-size: 14px; }
+        /* Se a tela for maior que 480px, volta para linha única */
+        @media (min-width: 480px) {
+            .input-row { 
+                display: grid; 
+                grid-template-columns: 2fr 1fr 50px; 
+                align-items: end; 
+            }
+        }
 
-        .btn-add-plus { height: 45px; background: var(--accent-mint); color: #2D4A3E; border: none; border-radius: 12px; font-size: 24px; cursor: pointer; transition: 0.2s; }
-        .btn-add-plus:hover { background: var(--accent-mint-dark); transform: translateY(-2px); }
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 10px; font-weight: 800; color: #A0968D; text-transform: uppercase; }
+        input { border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; outline: none; background: #FAFAFA; font-size: 16px; width: 100%; box-sizing: border-box; }
 
+        .btn-add-plus { height: 48px; background: var(--accent-mint); color: #2D4A3E; border: none; border-radius: 12px; font-size: 24px; cursor: pointer; }
+
+        /* Lista de Tarefas */
         .tasks-container { width: 100%; max-width: 480px; }
         .task-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 18px;
             margin-bottom: 15px;
             cursor: pointer;
-            transition: all 0.3s ease;
             position: relative;
             box-shadow: var(--shadow-soft);
+            box-sizing: border-box;
         }
-        .task-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
         .task-card.active { border: 2px solid var(--accent-mint-dark); background: #F9FEFC; }
         .task-card.completed { border: 2px solid var(--success-gold); }
 
-        .btn-delete { position: absolute; top: 15px; right: 15px; background: #fdf2f2; color: #e57373; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+        .btn-delete { position: absolute; top: 12px; right: 12px; background: #fdf2f2; color: #e57373; border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
 
-        .progress-bg { height: 6px; background: #F0F0F0; border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        .progress-bg { height: 6px; background: #F0F0F0; border-radius: 10px; margin: 12px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--accent-mint-dark); transition: width 0.6s ease; }
         .completed .progress-fill { background: var(--success-gold); }
 
-        .task-meta { display: flex; justify-content: space-between; font-size: 12px; font-weight: 500; color: #A0968D; }
+        .task-meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: 500; color: #A0968D; }
     </style>
 </head>
 <body>
@@ -115,9 +141,9 @@
         <span id="current-task-display">Defina seu foco</span>
         <div id="display">00:00:00</div>
         <div class="btn-group">
-            <button class="icon-btn btn-reset" onclick="reset()" title="Resetar">⟲</button>
-            <button class="icon-btn btn-play" onclick="start()" title="Iniciar">▶</button>
-            <button class="icon-btn btn-pause" onclick="pause()" title="Pausar">❙❙</button>
+            <button class="icon-btn btn-reset" onclick="reset()">⟲</button>
+            <button class="icon-btn btn-play" onclick="start()">▶</button>
+            <button class="icon-btn btn-pause" onclick="pause()">❙❙</button>
         </div>
     </div>
 
@@ -138,18 +164,15 @@
     <div id="task-list" class="tasks-container"></div>
 
     <script>
+        // ... O mesmo código JavaScript anterior permanece aqui ...
         let timer;
         let seconds = 0;
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         let activeTaskId = null;
 
-        // Carregar dados iniciais
         renderTasks();
 
-        function save() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
+        function save() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
         function formatTime(s) {
             const h = Math.floor(s / 3600);
             const m = Math.floor((s % 3600) / 60);
@@ -194,7 +217,7 @@
             if (activeTaskId) {
                 const task = tasks.find(t => t.id === activeTaskId);
                 task.elapsedSeconds = seconds;
-                save(); // Salva o tempo a cada segundo
+                save();
                 renderTasks();
             }
         }
