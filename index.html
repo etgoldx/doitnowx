@@ -6,22 +6,22 @@
     <title>Tempo & Foco</title>
     <style>
         :root {
-            /* RESTAURANDO A PALETA ORIGINAL */
-            --bg-page: #FDFBF7; /* Creme clarinho */
+            --bg-page: #FDFBF7;
             --bg-card: #FFFFFF;
-            --text-title: #4A3F35; /* Marrom suave */
+            --text-title: #4A3F35;
             --text-body: #6B5E53;
-            --accent-mint: #D4E9E2; /* Verde Menta Pastel */
+            --accent-mint: #D4E9E2;
             --accent-mint-dark: #A8D5BA;
-            --accent-peach: #F9E2D2; /* Pêssego Pastel */
+            --accent-peach: #F9E2D2;
             --border-color: #E8E2D9;
             --danger: #FFBABD;
             --success-gold: #FFD700;
-            
-            /* SOMBRAS SUAVES REATIVADAS */
             --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 4px rgba(0, 0, 0, 0.02);
             --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.04);
         }
+
+        /* Ajuste Global para evitar estouro de tela */
+        * { box-sizing: border-box; }
 
         body {
             background-color: var(--bg-page);
@@ -32,55 +32,55 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px; /* Reduzi para dar mais espaço no celular */
         }
 
-        .header-container { text-align: center; margin-bottom: 40px; }
-        .app-title { font-size: 32px; font-weight: 300; color: var(--text-title); letter-spacing: 4px; margin: 0; text-transform: uppercase; }
+        .header-container { text-align: center; margin-bottom: 30px; margin-top: 10px; }
+        .app-title { font-size: 26px; font-weight: 300; color: var(--text-title); letter-spacing: 3px; margin: 0; text-transform: uppercase; }
         .app-title span { font-weight: 800; color: var(--accent-mint-dark); }
 
+        /* Timer Principal Adaptável */
         .main-timer {
             background: var(--bg-card);
-            padding: 40px;
+            padding: 35px 20px;
             border-radius: 40px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
             width: 100%;
             max-width: 480px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             transition: all 0.3s ease;
         }
 
-        .main-timer:hover { box-shadow: var(--shadow-hover); }
-
-        #current-task-display { font-size: 13px; font-weight: 700; color: var(--accent-mint-dark); text-transform: uppercase; letter-spacing: 2px; }
+        #current-task-display { font-size: 11px; font-weight: 700; color: var(--accent-mint-dark); text-transform: uppercase; letter-spacing: 2px; }
         
+        /* Fonte do Cronômetro Fluida */
         #display { 
-            font-size: 18vw; 
-            max-font-size: 84px;
+            font-size: 16vw; /* Ajusta conforme a largura da tela */
             font-weight: 200; 
             color: var(--text-title); 
-            margin: 20px 0; 
+            margin: 15px 0; 
             font-family: 'JetBrains Mono', monospace; 
             font-variant-numeric: tabular-nums; 
+            line-height: 1;
         }
 
-        @media (min-width: 500px) { #display { font-size: 84px; } }
-
-        .btn-group { display: flex; gap: 15px; justify-content: center; align-items: center; }
-        
-        .icon-btn { 
-            width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; 
-            transition: all 0.2s ease; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+        /* Trava o tamanho em telas grandes */
+        @media (min-width: 500px) {
+            #display { font-size: 80px; }
+            .app-title { font-size: 32px; }
+            .main-timer { padding: 50px 40px; }
         }
+
+        .btn-group { display: flex; gap: 12px; justify-content: center; align-items: center; }
+        .icon-btn { width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s; }
         .icon-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
-        
         .btn-play { background: var(--accent-mint); color: #2D4A3E; }
         .btn-pause { background: var(--accent-peach); color: #6E4B31; }
         .btn-reset { background: transparent; color: #A0968D; border: 1px solid var(--border-color); font-size: 22px; }
 
+        /* Container de Criação */
         .creation-container {
             width: 100%;
             max-width: 480px;
@@ -88,32 +88,24 @@
             padding: 25px;
             border-radius: 25px;
             border: 1px solid var(--border-color);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             box-shadow: var(--shadow-soft);
         }
 
         .input-row { display: flex; flex-direction: column; gap: 15px; }
         
+        /* Ajuste para Desktop */
         @media (min-width: 480px) {
             .input-row { display: grid; grid-template-columns: 2fr 1fr 54px; gap: 12px; align-items: end; }
         }
 
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         label { font-size: 11px; font-weight: 800; color: #A0968D; text-transform: uppercase; letter-spacing: 1px; }
-        
-        input { 
-            border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; 
-            outline: none; background: #FAFAFA; font-size: 14px; color: var(--text-body);
-        }
-        input:focus { border-color: var(--accent-mint-dark); }
+        input { border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; outline: none; background: #FAFAFA; font-size: 16px; width: 100%; color: var(--text-body); }
 
-        .btn-add-plus { 
-            height: 48px; background: var(--accent-mint); color: #2D4A3E; 
-            border: none; border-radius: 12px; font-size: 24px; cursor: pointer; 
-            transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .btn-add-plus:hover { background: var(--accent-mint-dark); transform: translateY(-2px); }
+        .btn-add-plus { height: 48px; background: var(--accent-mint); color: #2D4A3E; border: none; border-radius: 12px; font-size: 24px; cursor: pointer; transition: 0.2s; }
 
+        /* Cards de Tarefas */
         .tasks-container { width: 100%; max-width: 480px; }
         .task-card {
             background: var(--bg-card);
@@ -122,20 +114,14 @@
             padding: 20px;
             margin-bottom: 15px;
             cursor: pointer;
-            transition: all 0.3s ease;
             position: relative;
             box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
         }
-        .task-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
         .task-card.active { border: 2px solid var(--accent-mint-dark); background: #F9FEFC; }
         .task-card.completed { border: 2px solid var(--success-gold); }
 
-        .btn-delete { 
-            position: absolute; top: 15px; right: 15px; background: #fdf2f2; 
-            color: #e57373; border: none; width: 28px; height: 28px; 
-            border-radius: 50%; cursor: pointer; font-size: 11px; 
-            display: flex; align-items: center; justify-content: center; transition: 0.2s;
-        }
+        .btn-delete { position: absolute; top: 12px; right: 12px; background: #fdf2f2; color: #e57373; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; }
 
         .progress-bg { height: 6px; background: #F0F0F0; border-radius: 10px; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--accent-mint-dark); transition: width 0.6s ease; }
@@ -154,9 +140,9 @@
         <span id="current-task-display">Defina seu foco</span>
         <div id="display">00:00:00</div>
         <div class="btn-group">
-            <button class="icon-btn btn-reset" onclick="reset()" title="Resetar">⟲</button>
-            <button class="icon-btn btn-play" onclick="start()" title="Iniciar">▶</button>
-            <button class="icon-btn btn-pause" onclick="pause()" title="Pausar">❙❙</button>
+            <button class="icon-btn btn-reset" onclick="reset()">⟲</button>
+            <button class="icon-btn btn-play" onclick="start()">▶</button>
+            <button class="icon-btn btn-pause" onclick="pause()">❙❙</button>
         </div>
     </div>
 
