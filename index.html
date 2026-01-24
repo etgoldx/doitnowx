@@ -17,71 +17,82 @@
             background-image: linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px), 
                               linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
             background-size: 30px 30px;
-            user-select: none;
+            user-select: none; -webkit-tap-highlight-color: transparent;
         }
 
+        /* HUD Header */
         .hud-header {
-            border-bottom: 2px solid var(--neon); padding: 10px 20px;
+            border-bottom: 2px solid var(--neon); padding: 12px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
         }
 
-        .hud-box { border: 1px solid var(--border); padding: 5px 15px; position: relative; }
+        .hud-box { border: 1px solid var(--border); padding: 6px 18px; position: relative; }
         .hud-box::before { content: ''; position: absolute; top: -2px; left: -2px; width: 6px; height: 6px; background: var(--neon); }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 25px 15px; }
 
+        /* Timer Central - Ajuste Mobile */
         .timer-unit {
             background: var(--card-bg); border: 1px solid var(--border);
-            padding: 40px 10px; text-align: center; position: relative;
+            padding: 50px 10px; text-align: center; position: relative;
             clip-path: polygon(2% 0, 98% 0, 100% 20%, 100% 80%, 98% 100%, 2% 100%, 0 80%, 0 20%);
-            margin-bottom: 30px; border-top: 4px solid var(--neon);
+            margin: 20px auto 40px auto; border-top: 4px solid var(--neon);
+            max-width: 600px;
         }
 
-        #display { font-size: clamp(2.5rem, 12vw, 5.5rem); font-weight: 700; color: var(--neon); text-shadow: 0 0 20px rgba(0,242,255,0.4); margin: 10px 0; }
-        #current-mission { font-size: 10px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; }
+        #display { font-size: clamp(2.8rem, 14vw, 5.8rem); font-weight: 700; color: var(--neon); text-shadow: 0 0 25px rgba(0,242,255,0.4); margin: 15px 0; }
+        #current-mission { font-size: 11px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; font-weight: bold; }
 
+        /* Painel de Controle */
         .control-panel {
-            background: rgba(0,0,0,0.5); border: 1px solid var(--border);
-            display: grid; grid-template-columns: 1fr 160px 60px; gap: 10px; padding: 15px; margin-bottom: 30px;
+            background: rgba(0,0,0,0.6); border: 1px solid var(--border);
+            display: grid; grid-template-columns: 1fr 160px 60px; gap: 10px; padding: 18px; margin-bottom: 40px;
         }
 
         input {
             background: rgba(0,0,0,0.8); border: 1px solid var(--border);
-            color: var(--neon); padding: 12px; outline: none; font-family: 'JetBrains Mono'; font-size: 14px;
+            color: var(--neon); padding: 14px; outline: none; font-family: 'JetBrains Mono'; font-size: 14px; border-radius: 4px;
         }
 
         .btn-tactical {
             background: var(--card-bg); border: 1px solid var(--neon); color: var(--neon);
             cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center; transition: 0.1s;
         }
-        .btn-tactical:active { background: var(--neon); color: black; }
+        .btn-tactical:active { background: var(--neon); color: black; transform: scale(0.98); }
 
-        .mission-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        /* Lista de Missões */
+        .mission-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
 
         .mission-card {
             background: rgba(0, 242, 255, 0.02); border: 1px solid var(--border);
-            padding: 15px; transition: 0.3s;
+            padding: 20px; transition: 0.3s; position: relative;
         }
-        .mission-card.active { border-color: var(--neon); background: rgba(0, 242, 255, 0.08); }
-        .mission-card.completed { opacity: 0.3; filter: grayscale(1); }
+        .mission-card.active { border-color: var(--neon); background: rgba(0, 242, 255, 0.1); border-width: 1.5px; }
+        .mission-card.completed { opacity: 0.25; filter: grayscale(1); border-style: dotted; }
 
-        .progress-bar { height: 2px; background: rgba(0,242,255,0.1); margin: 12px 0; }
-        .progress-fill { height: 100%; background: var(--neon); width: 0%; box-shadow: 0 0 8px var(--neon); transition: width 0.3s; }
+        .progress-bar { height: 3px; background: rgba(0,242,255,0.08); margin: 15px 0; border-radius: 2px; }
+        .progress-fill { height: 100%; background: var(--neon); width: 0%; box-shadow: 0 0 10px var(--neon); transition: width 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
 
+        /* Modal Operacional */
         .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.96);
             display: none; align-items: center; justify-content: center; z-index: 2000;
         }
         .modal-content {
-            background: var(--bg); border: 2px solid var(--neon); padding: 30px;
-            width: 85%; max-width: 380px; text-align: center;
+            background: var(--bg); border: 2px solid var(--neon); padding: 35px;
+            width: 88%; max-width: 400px; text-align: center;
         }
 
-        @media (max-width: 600px) {
+        /* Fab Lixeira Direita */
+        .fab-container { position: fixed; bottom: 25px; right: 25px; z-index: 150; }
+
+        @media (max-width: 650px) {
             .control-panel { grid-template-columns: 1fr; }
-            .timer-unit { clip-path: none; border-radius: 10px; }
+            .timer-unit { clip-path: none; border-radius: 12px; padding: 40px 5px; }
+            #display { font-size: 15vw; }
+            .mission-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -89,53 +100,48 @@
 
     <div id="modal" class="modal">
         <div class="modal-content">
-            <div id="modal-title" style="color: var(--neon); font-weight: bold; margin-bottom: 15px; letter-spacing: 2px;">SISTEMA_ALERTA</div>
-            <p id="modal-text" style="font-size: 12px; margin-bottom: 25px; color: var(--text);"></p>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-tactical" style="flex:1; padding: 15px;" onclick="closeModal()">CANCELAR</button>
-                <button id="modal-confirm-btn" class="btn-tactical" style="flex:1; background: var(--neon); color: black; padding: 15px;">CONFIRMAR</button>
+            <div id="modal-title" style="color: var(--neon); font-weight: bold; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Atenção Unidade</div>
+            <p id="modal-text" style="font-size: 13px; margin-bottom: 25px; color: var(--text); line-height: 1.6;"></p>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn-tactical" style="flex:1; padding: 16px;" onclick="closeModal()">ABORTAR</button>
+                <button id="modal-confirm-btn" class="btn-tactical" style="flex:1; background: var(--neon); color: black; padding: 16px;">EXECUTAR</button>
             </div>
         </div>
     </div>
 
     <div class="hud-header">
         <div class="hud-box">
-            <span style="font-size: 8px; color: var(--dim); font-weight: bold;">TOTAL_LÍQUIDO</span><br>
-            <span class="hud-value" id="total-net" style="color: var(--neon);">00:00:00</span>
+            <span style="font-size: 8px; color: var(--dim); font-weight: bold; letter-spacing: 1px;">TOTAL_LÍQUIDO</span><br>
+            <span class="hud-value" id="total-net" style="color: var(--neon); font-size: 16px;">00:00:00</span>
         </div>
         <div style="text-align: right">
-            <span style="font-size: 8px; color: var(--neon); font-weight: bold;">STATUS_OP</span><br>
-            <span id="op-tag" class="hud-value" style="font-size: 11px;">STANDBY</span>
+            <span style="font-size: 8px; color: var(--neon); font-weight: bold; letter-spacing: 1px;">STATUS_OP</span><br>
+            <span id="op-tag" class="hud-value" style="font-size: 11px; font-weight: bold;">STANDBY</span>
         </div>
     </div>
 
     <div class="container">
-        <div style="text-align: center; margin-bottom: 15px;">
-            <div style="font-size: 10px; letter-spacing: 4px; color: var(--neon); font-weight: bold;">GEMINI_OS // TACTICAL_HUD</div>
-            <div style="font-size: 8px; color: var(--dim); margin-top: 5px;">2-TAP: FULLSCREEN | 1-TAP: SELECIONAR</div>
-        </div>
-
         <div class="timer-unit">
-            <div id="current-mission">SELECIONE_UMA_DISCIPLINA</div>
+            <div id="current-mission">NENHUMA_UNIDADE_SELECIONADA</div>
             <div id="display">00:00:00</div>
-            <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
-                <button class="btn-tactical" style="width: 80px; height: 45px;" onclick="confirmReset()">RESET</button>
-                <button class="btn-tactical" style="width: 100px; height: 45px; background: rgba(0,242,255,0.15);" onclick="start()">START</button>
-                <button class="btn-tactical" style="width: 80px; height: 45px;" onclick="pause()">PAUSE</button>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
+                <button class="btn-tactical" style="width: 85px; height: 48px;" onclick="confirmReset()">RESET</button>
+                <button class="btn-tactical" style="width: 110px; height: 48px; background: rgba(0,242,255,0.18); border-width: 2px;" onclick="start()">START</button>
+                <button class="btn-tactical" style="width: 85px; height: 48px;" onclick="pause()">PAUSE</button>
             </div>
         </div>
 
         <div class="control-panel">
-            <input type="text" id="task-name" placeholder="NOME_DA_DISCIPLINA">
-            <input type="text" id="task-time" placeholder="HH:MM:SS" maxlength="8">
-            <button class="btn-tactical" onclick="createTask()" style="font-size: 20px;">+</button>
+            <input type="text" id="task-name" placeholder="DISCIPLINA / MISSÃO">
+            <input type="text" id="task-time" placeholder="00:00:00" maxlength="8">
+            <button class="btn-tactical" onclick="createTask()" style="font-size: 24px;">+</button>
         </div>
 
         <div id="task-list" class="mission-grid"></div>
     </div>
 
-    <div style="position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px;">
-        <button class="btn-tactical" style="width: 45px; height: 45px; border-radius: 50%;" onclick="confirmClearAll()" title="Limpar Banco de Dados">🗑️</button>
+    <div class="fab-container">
+        <button class="btn-tactical" style="width: 50px; height: 50px; border-radius: 50%; font-size: 18px;" onclick="confirmClearAll()" title="Zerar Sistema">🗑️</button>
     </div>
 
     <script>
@@ -166,7 +172,7 @@
 
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
+                document.documentElement.requestFullscreen().catch(() => {});
                 sounds.start();
             } else {
                 document.exitFullscreen();
@@ -215,8 +221,8 @@
             sounds.click();
             if (timer) pause();
             activeTaskId = id; seconds = task.elapsedSeconds;
-            document.getElementById('current-mission').innerText = "MISSAO: " + task.name;
-            document.getElementById('op-tag').innerText = "READY";
+            document.getElementById('current-mission').innerText = "OP_ATIVA: " + task.name;
+            document.getElementById('op-tag').innerText = "DEPLOYED";
             updateDisplay(); renderTasks();
         }
 
@@ -249,13 +255,13 @@
 
         function confirmReset() {
             if (!activeTaskId) return;
-            openModal("DATA_RESET", "CONFIRMAR REINICIALIZAÇÃO DO CRONÔMETRO?", () => {
+            openModal("SISTEMA_RESET", "CONFIRMAR REINICIALIZAÇÃO DOS DADOS DE TEMPO DESTA UNIDADE?", () => {
                 pause(); seconds = 0; updateDisplay(); renderTasks();
             });
         }
 
         function confirmClearAll() {
-            openModal("SISTEMA_PURGE", "APAGAR TODOS OS REGISTROS OPERACIONAIS?", () => {
+            openModal("PURGE_GERAL", "CONFIRMAR DELEÇÃO DE TODOS OS REGISTROS OPERACIONAIS DO DIA?", () => {
                 pause(); tasks = []; activeTaskId = null; seconds = 0;
                 localStorage.removeItem('study_tasks');
                 renderTasks();
@@ -267,7 +273,7 @@
             const task = tasks.find(t => t.id === id);
             task.completed = !task.completed;
             sounds.click();
-            if (task.completed && activeTaskId === id) { pause(); activeTaskId = null; }
+            if (task.completed && activeTaskId === id) { pause(); activeTaskId = null; document.getElementById('display').innerText = "00:00:00"; }
             save(); renderTasks();
         }
 
@@ -278,12 +284,12 @@
                 const perc = Math.min((task.elapsedSeconds / task.goalSeconds) * 100, 100).toFixed(0);
                 list.innerHTML += `
                     <div class="mission-card ${task.id === activeTaskId ? 'active' : ''} ${task.completed ? 'completed' : ''}" onclick="selectTask(${task.id})">
-                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:5px;">
-                            <span style="font-size:10px; font-weight:bold; letter-spacing:1px;">${task.name.toUpperCase()}</span>
+                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+                            <span style="font-size:11px; font-weight:bold; letter-spacing:1px; color:var(--text);">${task.name.toUpperCase()}</span>
                             <input type="checkbox" ${task.completed ? 'checked' : ''} onclick="toggleComplete(event, ${task.id})">
                         </div>
                         <div class="progress-bar"><div id="fill-${task.id}" class="progress-fill" style="width:${perc}%"></div></div>
-                        <div style="display:flex; justify-content:space-between; font-size:8px; color:var(--dim); font-weight:bold;">
+                        <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--dim); font-weight:bold;">
                             <span>OBJ: ${formatTime(task.goalSeconds)}</span>
                             <span>LIQ: ${formatTime(task.elapsedSeconds)}</span>
                         </div>
