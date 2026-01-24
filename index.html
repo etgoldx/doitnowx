@@ -3,133 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>DIÁRIO DE BORDO - Elite</title>
+    <title>00:00:00 - DIÁRIO DE BORDO</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0d0f10;
-            --card: #16191b;
-            --text: #ffffff;
-            --text-dim: #94a3b8;
-            --accent: #38b000;
-            --border: rgba(255,255,255,0.08);
-            --bar-bg: rgba(255,255,255,0.05);
+            --bg: #0d0f10; --card: #16191b; --text: #ffffff;
+            --text-dim: #94a3b8; --accent: #38b000; --border: rgba(255,255,255,0.08);
+            --bar-bg: rgba(255,255,255,0.05); --success: #38b000; --danger: #ef4444;
         }
 
         body.light-mode {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text: #0f172a;
-            --text-dim: #64748b;
-            --accent: #2563eb;
-            --border: rgba(0,0,0,0.1);
-            --bar-bg: rgba(0,0,0,0.05);
+            --bg: #f8fafc; --card: #ffffff; --text: #0f172a;
+            --text-dim: #64748b; --accent: #2563eb; --border: rgba(0,0,0,0.1);
+            --bar-bg: rgba(0,0,0,0.05); --success: #059669; --danger: #dc2626;
         }
 
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.25s; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.2s, color 0.2s; }
 
         body {
             background-color: var(--bg); color: var(--text);
-            margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh;
+            margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        /* Barra de Horas Líquidas Superior (Suave) */
+        /* Modais Customizados */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal-card {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 25px; border-radius: 24px; width: 90%; max-width: 350px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-title { font-weight: 800; font-size: 18px; margin-bottom: 10px; color: var(--text); }
+        .modal-text { font-size: 14px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.5; }
+        .modal-btns { display: flex; gap: 10px; justify-content: center; }
+        .btn-modal { padding: 10px 20px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; flex: 1; }
+        .btn-confirm { background: var(--accent); color: white; }
+        .btn-cancel { background: var(--bar-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Estilos de Interface (Mantidos) */
         .top-stats-bar {
-            width: 100%; padding: 8px 20px; background: var(--card);
+            width: 100%; padding: 10px 20px; background: var(--card);
             border-bottom: 1px solid var(--border); display: flex;
             justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
         }
-        .net-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); letter-spacing: 1px; }
-        .net-value { font-size: 14px; font-weight: 600; color: var(--accent); font-family: monospace; }
+        .net-value { font-size: 15px; font-weight: 800; color: var(--accent); font-family: monospace; }
 
         .container { width: 100%; max-width: 420px; padding: 20px; text-align: center; }
-
-        .app-title { font-size: 18px; font-weight: 800; letter-spacing: 2px; margin-bottom: 30px; color: var(--text); }
-        .app-title span { color: var(--accent); }
-
-        /* Timer de Foco */
-        .timer-section { margin-bottom: 30px; }
-        #current-mission { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 5px; }
-        #display { font-size: 64px; font-weight: 400; letter-spacing: -2px; margin: 10px 0; color: var(--text); }
-
-        .controls { display: flex; gap: 12px; justify-content: center; margin-top: 15px; }
-        .btn-cmd { 
-            width: 50px; height: 50px; border-radius: 15px; border: 1px solid var(--border);
-            background: var(--card); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
+        #display { font-size: 60px; font-weight: 300; margin: 10px 0; font-variant-numeric: tabular-nums; }
+        
+        .add-box { 
+            background: var(--card); padding: 15px; border-radius: 20px; 
+            border: 1px solid var(--border); display: grid; grid-template-columns: 1fr 100px 45px; gap: 8px; margin-bottom: 25px; 
         }
-        .btn-cmd.play { background: var(--accent); color: white; border: none; }
+        input { background: var(--bg); border: 1px solid var(--border); padding: 10px; border-radius: 10px; color: var(--text); outline: none; width: 100%; }
 
-        /* Criação de Disciplina */
-        .add-box { display: grid; grid-template-columns: 1fr 70px 50px; gap: 8px; margin-bottom: 25px; }
-        input { 
-            background: var(--card); border: 1px solid var(--border); padding: 12px; 
-            border-radius: 12px; color: var(--text); font-size: 14px; outline: none;
-        }
-        input::placeholder { color: var(--text-dim); }
-        .btn-plus { background: var(--accent); border: none; border-radius: 12px; color: white; cursor: pointer; font-size: 20px; }
-
-        /* Lista de Missões */
-        .task-card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-            padding: 15px; margin-bottom: 10px; text-align: left; position: relative; cursor: pointer;
-        }
-        .task-card.active { border-color: var(--accent); box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-        .task-card h4 { margin: 0; font-size: 14px; text-transform: uppercase; color: var(--text); }
-
-        .progress-container { height: 4px; background: var(--bar-bg); border-radius: 2px; margin: 10px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent); width: 0%; }
-
-        .task-footer { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: var(--text-dim); }
-
-        /* Floating Buttons */
+        .task-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 15px; margin-bottom: 10px; text-align: left; }
+        .task-card.active { border-color: var(--accent); border-width: 2px; }
+        .task-card.completed { opacity: 0.5; border-style: dashed; }
+        
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; border-radius: 2px; transition: width 0.5s; }
         .fab-group { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .fab { 
-            width: 45px; height: 45px; border-radius: 50%; border: none; color: white;
-            display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
+        .fab { width: 45px; height: 45px; border-radius: 50%; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
+    <div id="modal" class="modal-overlay">
+        <div class="modal-card">
+            <div id="modal-title" class="modal-title">Aviso</div>
+            <div id="modal-text" class="modal-text">Deseja prosseguir?</div>
+            <div class="modal-btns">
+                <button class="btn-modal btn-cancel" onclick="closeModal()">CANCELAR</button>
+                <button id="modal-confirm-btn" class="btn-modal btn-confirm">CONFIRMAR</button>
+            </div>
+        </div>
+    </div>
+
     <div class="top-stats-bar">
-        <span class="net-label">Líquidas Hoje</span>
+        <span style="font-size: 10px; font-weight: 800; color: var(--text-dim);">HORAS LÍQUIDAS TOTAIS</span>
         <span class="net-value" id="total-net">00:00:00</span>
     </div>
 
     <div class="container">
-        <h1 class="app-title">DIÁRIO DE <span>BORDO</span></h1>
-
-        <div class="timer-section">
-            <span id="current-mission">Selecione uma Missão</span>
-            <div id="display">00:00:00</div>
-            <div class="controls">
-                <button class="btn-cmd" onclick="reset()">⟲</button>
-                <button class="btn-cmd play" onclick="start()">▶</button>
-                <button class="btn-cmd" onclick="pause()">❙❙</button>
-            </div>
+        <span id="current-mission" style="font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase;">Aguardando Missão</span>
+        <div id="display">00:00:00</div>
+        
+        <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 30px;">
+            <button onclick="confirmReset()" style="width: 50px; height: 50px; border-radius: 15px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer;">⟲</button>
+            <button onclick="start()" style="width: 50px; height: 50px; border-radius: 15px; background: var(--accent); color: white; border: none; cursor: pointer;">▶</button>
+            <button onclick="pause()" style="width: 50px; height: 50px; border-radius: 15px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer;">❙❙</button>
         </div>
 
         <div class="add-box">
             <input type="text" id="task-name" placeholder="Matéria">
-            <input type="number" id="task-goal" placeholder="Min">
-            <button class="btn-plus" onclick="createTask()">+</button>
+            <input type="text" id="task-time" placeholder="01:00" maxlength="5">
+            <button onclick="createTask()" style="background: var(--accent); color: white; border: none; border-radius: 10px; cursor: pointer;">+</button>
         </div>
 
         <div id="task-list"></div>
     </div>
 
     <div class="fab-group">
-        <button class="fab" style="background: #ef4444;" onclick="clearAll()">🗑️</button>
+        <button class="fab" style="background: var(--danger);" onclick="confirmClearAll()">🗑️</button>
         <button class="fab" style="background: var(--accent);" onclick="toggleTheme()" id="theme-btn">☀️</button>
     </div>
 
     <script>
-        let timer;
-        let seconds = 0;
+        let timer, seconds = 0, activeTaskId = null;
         let tasks = JSON.parse(localStorage.getItem('study_tasks')) || [];
-        let activeTaskId = null;
+
+        // --- SISTEMA DE MODAL ---
+        function openModal(title, text, onConfirm) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            const btn = document.getElementById('modal-confirm-btn');
+            btn.onclick = () => { onConfirm(); closeModal(); };
+            document.getElementById('modal').style.display = 'flex';
+        }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        // --- LÓGICA DE ESTUDO ---
+        document.getElementById('task-time').addEventListener('input', e => {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 2) v = v.substring(0,2) + ':' + v.substring(2,4);
+            e.target.value = v;
+        });
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
@@ -146,89 +149,88 @@
         }
 
         function formatTime(s) {
-            const h = Math.floor(s / 3600);
-            const m = Math.floor((s % 3600) / 60);
-            const sec = s % 60;
+            const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
             return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
         }
 
         function createTask() {
-            const name = document.getElementById('task-name').value;
-            const goal = document.getElementById('task-goal').value;
-            if (!name || !goal) return;
-            tasks.push({ id: Date.now(), name, goalSeconds: goal * 60, elapsedSeconds: 0 });
-            document.getElementById('task-name').value = '';
-            document.getElementById('task-goal').value = '';
+            const name = document.getElementById('task-name').value, timeStr = document.getElementById('task-time').value;
+            if (!name || !timeStr.includes(':')) return;
+            const [h, m] = timeStr.split(':').map(Number);
+            tasks.push({ id: Date.now(), name, goalSeconds: (h * 3600) + (m * 60), elapsedSeconds: 0, completed: false });
+            document.getElementById('task-name').value = ''; document.getElementById('task-time').value = '';
+            save(); renderTasks();
+        }
+
+        function toggleComplete(e, id) {
+            e.stopPropagation();
+            const task = tasks.find(t => t.id === id);
+            task.completed = !task.completed;
+            if (task.completed && activeTaskId === id) pause();
             save(); renderTasks();
         }
 
         function selectTask(id) {
-            if (timer) pause();
-            activeTaskId = id;
             const task = tasks.find(t => t.id === id);
-            seconds = task.elapsedSeconds;
+            if (task.completed) return;
+            if (timer) pause();
+            activeTaskId = id; seconds = task.elapsedSeconds;
             document.getElementById('current-mission').innerText = task.name;
             updateDisplay(); renderTasks();
         }
 
         function updateDisplay() {
-            document.getElementById('display').innerText = formatTime(seconds);
+            const t = formatTime(seconds);
+            document.getElementById('display').innerText = t;
+            document.title = `${t} - DIÁRIO DE BORDO`;
             if (activeTaskId) {
                 const task = tasks.find(t => t.id === activeTaskId);
                 task.elapsedSeconds = seconds;
                 save();
                 const fill = document.getElementById(`fill-${activeTaskId}`);
-                const pText = document.getElementById(`perc-${activeTaskId}`);
-                const p = Math.min((task.elapsedSeconds / task.goalSeconds) * 100, 100).toFixed(0);
-                if(fill) fill.style.width = p + '%';
-                if(pText) pText.innerText = p + '%';
-                const totalText = document.getElementById(`total-${activeTaskId}`);
-                if(totalText) totalText.innerText = 'FEITO: ' + formatTime(task.elapsedSeconds);
+                if(fill) fill.style.width = Math.min((task.elapsedSeconds / task.goalSeconds) * 100, 100) + '%';
             }
         }
 
-        function start() {
+        function start() { if (activeTaskId && !timer) timer = setInterval(() => { seconds++; updateDisplay(); }, 1000); }
+        function pause() { clearInterval(timer); timer = null; document.title = "PAUSADO - DIÁRIO DE BORDO"; }
+
+        function confirmReset() {
             if (!activeTaskId) return;
-            if (!timer) timer = setInterval(() => { seconds++; updateDisplay(); }, 1000);
+            openModal("REINICIAR CRONÔMETRO", "Deseja zerar o tempo desta disciplina e começar de novo?", () => {
+                pause(); seconds = 0; updateDisplay(); renderTasks();
+            });
         }
 
-        function pause() { clearInterval(timer); timer = null; }
-
-        function reset() {
-            if (!activeTaskId || !confirm("Reiniciar cronômetro?")) return;
-            pause(); seconds = 0; updateDisplay(); renderTasks();
-        }
-
-        function clearAll() {
-            if (confirm("Apagar todos os registros do dia?")) {
+        function confirmClearAll() {
+            openModal("LIMPAR TUDO", "CUIDADO: Isso apagará todas as disciplinas e horas líquidas do dia. Confirmar?", () => {
                 pause(); tasks = []; activeTaskId = null; seconds = 0;
                 localStorage.removeItem('study_tasks');
-                document.getElementById('display').innerText = "00:00:00";
-                document.getElementById('total-net').innerText = "00:00:00";
-                renderTasks();
-            }
+                document.title = "DIÁRIO DE BORDO"; renderTasks();
+            });
         }
 
         function renderTasks() {
             const list = document.getElementById('task-list');
             list.innerHTML = '';
-            tasks.forEach(task => {
+            [...tasks].sort((a,b) => a.completed - b.completed).forEach(task => {
                 const perc = Math.min((task.elapsedSeconds / task.goalSeconds) * 100, 100).toFixed(0);
                 list.innerHTML += `
-                    <div class="task-card ${task.id === activeTaskId ? 'active' : ''}" onclick="selectTask(${task.id})">
+                    <div class="task-card ${task.id === activeTaskId ? 'active' : ''} ${task.completed ? 'completed' : ''}" onclick="selectTask(${task.id})">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h4>${task.name}</h4>
-                            <span id="perc-${task.id}" style="color:var(--accent); font-weight:800; font-size:12px;">${perc}%</span>
+                            <strong style="font-size: 13px;">${task.name.toUpperCase()}</strong>
+                            <button class="btn-check" style="background:${task.completed ? 'var(--success)' : 'transparent'}; color:${task.completed ? 'white' : 'var(--text-dim)'}; border:1px solid var(--border); border-radius:8px; width:30px; height:30px; cursor:pointer;" onclick="toggleComplete(event, ${task.id})">✓</button>
                         </div>
-                        <div class="progress-container"><div id="fill-${task.id}" class="progress-fill" style="width:${perc}%"></div></div>
-                        <div class="task-footer">
-                            <span>META: ${task.goalSeconds/60}M</span>
-                            <span id="total-${task.id}">FEITO: ${formatTime(task.elapsedSeconds)}</span>
+                        <div style="height: 4px; background: var(--bar-bg); border-radius: 2px; margin: 10px 0; overflow: hidden;">
+                            <div id="fill-${task.id}" class="progress-fill" style="width:${perc}%"></div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:700; color:var(--text-dim);">
+                            <span>OBJETIVO: ${formatTime(task.goalSeconds).substring(0,5)}</span>
+                            <span>FEITO: ${formatTime(task.elapsedSeconds)}</span>
                         </div>
                     </div>`;
             });
-            const total = tasks.reduce((acc, t) => acc + t.elapsedSeconds, 0);
-            document.getElementById('total-net').innerText = formatTime(total);
+            save();
         }
         renderTasks();
     </script>
