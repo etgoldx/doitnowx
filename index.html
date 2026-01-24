@@ -3,121 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>00:00:00 - DIÁRIO DE BORDO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>00:00:00</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0d0f10; --card: #16191b; --text: #ffffff;
-            --text-dim: #94a3b8; --accent: #38b000; --border: rgba(255,255,255,0.08);
-            --bar-bg: rgba(255,255,255,0.05); --success: #38b000; --danger: #ef4444;
+            --bg: #050708; --card: #111416; --text: #f8fafc;
+            --text-dim: #64748b; --accent: #38b000; --border: rgba(255,255,255,0.06);
+            --bar-bg: rgba(255,255,255,0.03); --glow: rgba(56, 176, 0, 0.2);
         }
 
         body.light-mode {
-            --bg: #f8fafc; --card: #ffffff; --text: #0f172a;
-            --text-dim: #64748b; --accent: #2563eb; --border: rgba(0,0,0,0.1);
-            --bar-bg: rgba(0,0,0,0.05); --success: #059669; --danger: #dc2626;
+            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a;
+            --text-dim: #64748b; --accent: #2563eb; --border: rgba(0,0,0,0.05);
+            --bar-bg: rgba(0,0,0,0.05); --glow: rgba(37, 99, 235, 0.1);
         }
 
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.2s, color 0.2s; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 
         body {
             background-color: var(--bg); color: var(--text);
             margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        /* Modais Customizados */
+        /* Modal Estilizado */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
             display: none; align-items: center; justify-content: center; z-index: 1000;
         }
         .modal-card {
             background: var(--card); border: 1px solid var(--border);
-            padding: 25px; border-radius: 24px; width: 90%; max-width: 350px;
-            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            animation: modalIn 0.3s ease;
+            padding: 40px; border-radius: 32px; width: 90%; max-width: 400px;
+            text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
-        @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-title { font-weight: 800; font-size: 18px; margin-bottom: 10px; color: var(--text); }
-        .modal-text { font-size: 14px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.5; }
-        .modal-btns { display: flex; gap: 10px; justify-content: center; }
-        .btn-modal { padding: 10px 20px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; flex: 1; }
-        .btn-confirm { background: var(--accent); color: white; }
-        .btn-cancel { background: var(--bar-bg); color: var(--text); border: 1px solid var(--border); }
 
-        /* Estilos de Interface (Mantidos) */
+        /* Top Bar Minimalista */
         .top-stats-bar {
-            width: 100%; padding: 10px 20px; background: var(--card);
+            width: 100%; padding: 15px 40px; background: var(--card);
             border-bottom: 1px solid var(--border); display: flex;
             justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
         }
-        .net-value { font-size: 15px; font-weight: 800; color: var(--accent); font-family: monospace; }
+        .net-value { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 600; color: var(--accent); }
 
-        .container { width: 100%; max-width: 420px; padding: 20px; text-align: center; }
-        #display { font-size: 60px; font-weight: 300; margin: 10px 0; font-variant-numeric: tabular-nums; }
-        
-        .add-box { 
-            background: var(--card); padding: 15px; border-radius: 20px; 
-            border: 1px solid var(--border); display: grid; grid-template-columns: 1fr 100px 45px; gap: 8px; margin-bottom: 25px; 
+        /* Dashboard Principal */
+        .hero-container {
+            width: 100%; max-width: 900px; padding: 60px 20px;
+            display: flex; flex-direction: column; align-items: center;
         }
-        input { background: var(--bg); border: 1px solid var(--border); padding: 10px; border-radius: 10px; color: var(--text); outline: none; width: 100%; }
 
-        .task-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 15px; margin-bottom: 10px; text-align: left; }
-        .task-card.active { border-color: var(--accent); border-width: 2px; }
-        .task-card.completed { opacity: 0.5; border-style: dashed; }
+        .app-header { margin-bottom: 40px; text-align: center; }
+        .app-title { font-size: 14px; font-weight: 800; letter-spacing: 6px; color: var(--text-dim); text-transform: uppercase; margin: 0; }
+        .app-title span { color: var(--accent); }
+
+        .main-display-card {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 60px; border-radius: 48px; width: 100%; max-width: 600px;
+            text-align: center; margin-bottom: 40px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.2), 0 0 0 1px var(--border);
+            position: relative;
+        }
+
+        #display { 
+            font-family: 'JetBrains Mono', monospace; font-size: 110px; font-weight: 500; 
+            margin: 20px 0; color: var(--text); letter-spacing: -4px;
+        }
+
+        .controls { display: flex; gap: 20px; justify-content: center; }
+        .btn-cmd { 
+            width: 64px; height: 64px; border-radius: 20px; border: 1px solid var(--border);
+            background: var(--card); color: var(--text); cursor: pointer; font-size: 22px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-cmd:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 20px var(--glow); }
+        .btn-cmd.play { background: var(--accent); color: white; border: none; }
+
+        /* Lista de Matérias Responsiva */
+        .content-grid { width: 100%; max-width: 1000px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px; }
+
+        .add-box { 
+            grid-column: 1 / -1; background: var(--card); padding: 25px; border-radius: 24px; 
+            border: 1px solid var(--border); display: flex; gap: 15px; margin-bottom: 20px; 
+        }
+        .add-box input { background: var(--bg); border: 1px solid var(--border); padding: 15px; border-radius: 14px; color: var(--text); flex: 1; outline: none; font-size: 16px; }
+
+        .task-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 24px;
+            padding: 25px; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .task-card:hover { border-color: var(--accent); background: rgba(255,255,255,0.01); }
+        .task-card.active { border-color: var(--accent); box-shadow: 0 15px 30px var(--glow); }
+        .task-card.completed { opacity: 0.4; filter: grayscale(1); }
         
-        .progress-fill { height: 100%; background: var(--accent); width: 0%; border-radius: 2px; transition: width 0.5s; }
-        .fab-group { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .fab { width: 45px; height: 45px; border-radius: 50%; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .progress-track { height: 6px; background: var(--bar-bg); border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; border-radius: 10px; }
+
+        .btn-check { 
+            background: var(--bar-bg); border: 1px solid var(--border); color: var(--text-dim); 
+            width: 36px; height: 36px; border-radius: 12px; cursor: pointer;
+        }
+        .completed .btn-check { background: var(--accent); color: white; border: none; }
+
+        .fab-group { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 200; }
+        .fab { width: 56px; height: 56px; border-radius: 18px; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+        @media (max-width: 600px) {
+            #display { font-size: 60px; }
+            .main-display-card { padding: 30px; border-radius: 32px; }
+            .add-box { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
 
     <div id="modal" class="modal-overlay">
         <div class="modal-card">
-            <div id="modal-title" class="modal-title">Aviso</div>
-            <div id="modal-text" class="modal-text">Deseja prosseguir?</div>
-            <div class="modal-btns">
-                <button class="btn-modal btn-cancel" onclick="closeModal()">CANCELAR</button>
-                <button id="modal-confirm-btn" class="btn-modal btn-confirm">CONFIRMAR</button>
+            <div id="modal-title" class="modal-title" style="font-weight: 800; font-size: 20px; margin-bottom: 10px;">Aviso</div>
+            <p id="modal-text" style="color: var(--text-dim); font-size: 15px; margin-bottom: 25px;"></p>
+            <div style="display: flex; gap: 15px;">
+                <button class="btn-cmd" style="flex: 1; border-radius: 14px; font-size: 14px; font-weight: 800;" onclick="closeModal()">CANCELAR</button>
+                <button id="modal-confirm-btn" class="btn-cmd play" style="flex: 1; border-radius: 14px; font-size: 14px; font-weight: 800;">CONFIRMAR</button>
             </div>
         </div>
     </div>
 
     <div class="top-stats-bar">
-        <span style="font-size: 10px; font-weight: 800; color: var(--text-dim);">HORAS LÍQUIDAS TOTAIS</span>
-        <span class="net-value" id="total-net">00:00:00</span>
+        <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 9px; font-weight: 800; color: var(--text-dim); letter-spacing: 2px;">RELATÓRIO LÍQUIDO</span>
+            <span class="net-value" id="total-net">00:00:00</span>
+        </div>
+        <div id="active-tag" style="font-size: 10px; font-weight: 800; background: var(--bar-bg); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border);">STANDBY</div>
     </div>
 
-    <div class="container">
-        <span id="current-mission" style="font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase;">Aguardando Missão</span>
-        <div id="display">00:00:00</div>
-        
-        <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 30px;">
-            <button onclick="confirmReset()" style="width: 50px; height: 50px; border-radius: 15px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer;">⟲</button>
-            <button onclick="start()" style="width: 50px; height: 50px; border-radius: 15px; background: var(--accent); color: white; border: none; cursor: pointer;">▶</button>
-            <button onclick="pause()" style="width: 50px; height: 50px; border-radius: 15px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer;">❙❙</button>
+    <div class="hero-container">
+        <header class="app-header">
+            <h1 class="app-title">DIÁRIO DE <span>BORDO</span></h1>
+        </header>
+
+        <div class="main-display-card">
+            <span id="current-mission" style="font-size: 12px; font-weight: 800; color: var(--accent); letter-spacing: 3px; text-transform: uppercase;">Pronto para a Missão</span>
+            <div id="display">00:00:00</div>
+            <div class="controls">
+                <button class="btn-cmd" onclick="confirmReset()" title="Resetar">⟲</button>
+                <button class="btn-cmd play" onclick="start()" title="Iniciar">▶</button>
+                <button class="btn-cmd" onclick="pause()" title="Pausar">❙❙</button>
+            </div>
         </div>
 
         <div class="add-box">
-            <input type="text" id="task-name" placeholder="Matéria">
-            <input type="text" id="task-time" placeholder="01:00" maxlength="5">
-            <button onclick="createTask()" style="background: var(--accent); color: white; border: none; border-radius: 10px; cursor: pointer;">+</button>
+            <input type="text" id="task-name" placeholder="Nome da Disciplina">
+            <input type="text" id="task-time" placeholder="HH:MM" maxlength="5" style="width: 100px; text-align: center;">
+            <button class="btn-cmd play" style="width: 50px; height: 50px; border-radius: 14px;" onclick="createTask()">+</button>
         </div>
 
-        <div id="task-list"></div>
+        <div id="task-list" class="content-grid"></div>
     </div>
 
     <div class="fab-group">
-        <button class="fab" style="background: var(--danger);" onclick="confirmClearAll()">🗑️</button>
+        <button class="fab" style="background: #ff4757;" onclick="confirmClearAll()">🗑️</button>
         <button class="fab" style="background: var(--accent);" onclick="toggleTheme()" id="theme-btn">☀️</button>
     </div>
 
     <script>
-        let timer, seconds = 0, activeTaskId = null;
-        let tasks = JSON.parse(localStorage.getItem('study_tasks')) || [];
+        let timer, seconds = 0, activeTaskId = null, tasks = JSON.parse(localStorage.getItem('study_tasks')) || [];
 
-        // --- SISTEMA DE MODAL ---
         function openModal(title, text, onConfirm) {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-text').innerText = text;
@@ -127,7 +175,6 @@
         }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-        // --- LÓGICA DE ESTUDO ---
         document.getElementById('task-time').addEventListener('input', e => {
             let v = e.target.value.replace(/\D/g, '');
             if (v.length > 2) v = v.substring(0,2) + ':' + v.substring(2,4);
@@ -142,15 +189,15 @@
         }
         if(localStorage.getItem('theme') === 'light') toggleTheme();
 
+        function formatTime(s) {
+            const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+        }
+
         function save() { 
             localStorage.setItem('study_tasks', JSON.stringify(tasks)); 
             const total = tasks.reduce((acc, t) => acc + t.elapsedSeconds, 0);
             document.getElementById('total-net').innerText = formatTime(total);
-        }
-
-        function formatTime(s) {
-            const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
-            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
         }
 
         function createTask() {
@@ -162,27 +209,20 @@
             save(); renderTasks();
         }
 
-        function toggleComplete(e, id) {
-            e.stopPropagation();
-            const task = tasks.find(t => t.id === id);
-            task.completed = !task.completed;
-            if (task.completed && activeTaskId === id) pause();
-            save(); renderTasks();
-        }
-
         function selectTask(id) {
             const task = tasks.find(t => t.id === id);
             if (task.completed) return;
             if (timer) pause();
             activeTaskId = id; seconds = task.elapsedSeconds;
             document.getElementById('current-mission').innerText = task.name;
+            document.getElementById('active-tag').innerText = "EM OPERAÇÃO";
             updateDisplay(); renderTasks();
         }
 
         function updateDisplay() {
             const t = formatTime(seconds);
             document.getElementById('display').innerText = t;
-            document.title = `${t} - DIÁRIO DE BORDO`;
+            document.title = t; // Guia apenas com números
             if (activeTaskId) {
                 const task = tasks.find(t => t.id === activeTaskId);
                 task.elapsedSeconds = seconds;
@@ -193,21 +233,30 @@
         }
 
         function start() { if (activeTaskId && !timer) timer = setInterval(() => { seconds++; updateDisplay(); }, 1000); }
-        function pause() { clearInterval(timer); timer = null; document.title = "PAUSADO - DIÁRIO DE BORDO"; }
+        function pause() { clearInterval(timer); timer = null; document.getElementById('active-tag').innerText = "PAUSADO"; }
 
         function confirmReset() {
             if (!activeTaskId) return;
-            openModal("REINICIAR CRONÔMETRO", "Deseja zerar o tempo desta disciplina e começar de novo?", () => {
+            openModal("REINICIAR TEMPO", "Confirma o reset do cronômetro para esta disciplina?", () => {
                 pause(); seconds = 0; updateDisplay(); renderTasks();
             });
         }
 
         function confirmClearAll() {
-            openModal("LIMPAR TUDO", "CUIDADO: Isso apagará todas as disciplinas e horas líquidas do dia. Confirmar?", () => {
+            openModal("ZERAR TUDO", "Esta ação é irreversível. Deseja apagar todas as matérias e o tempo líquido?", () => {
                 pause(); tasks = []; activeTaskId = null; seconds = 0;
                 localStorage.removeItem('study_tasks');
-                document.title = "DIÁRIO DE BORDO"; renderTasks();
+                document.title = "00:00:00"; renderTasks();
+                document.getElementById('current-mission').innerText = "Aguardando Missão";
             });
+        }
+
+        function toggleComplete(e, id) {
+            e.stopPropagation();
+            const task = tasks.find(t => t.id === id);
+            task.completed = !task.completed;
+            if (task.completed && activeTaskId === id) { pause(); activeTaskId = null; seconds = 0; document.getElementById('display').innerText = "00:00:00"; }
+            save(); renderTasks();
         }
 
         function renderTasks() {
@@ -217,20 +266,22 @@
                 const perc = Math.min((task.elapsedSeconds / task.goalSeconds) * 100, 100).toFixed(0);
                 list.innerHTML += `
                     <div class="task-card ${task.id === activeTaskId ? 'active' : ''} ${task.completed ? 'completed' : ''}" onclick="selectTask(${task.id})">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong style="font-size: 13px;">${task.name.toUpperCase()}</strong>
-                            <button class="btn-check" style="background:${task.completed ? 'var(--success)' : 'transparent'}; color:${task.completed ? 'white' : 'var(--text-dim)'}; border:1px solid var(--border); border-radius:8px; width:30px; height:30px; cursor:pointer;" onclick="toggleComplete(event, ${task.id})">✓</button>
+                        <div style="display:flex; justify-content:space-between; align-items:start;">
+                            <strong style="font-size: 15px; letter-spacing: 0.5px;">${task.name.toUpperCase()}</strong>
+                            <button class="btn-check" onclick="toggleComplete(event, ${task.id})">✓</button>
                         </div>
-                        <div style="height: 4px; background: var(--bar-bg); border-radius: 2px; margin: 10px 0; overflow: hidden;">
-                            <div id="fill-${task.id}" class="progress-fill" style="width:${perc}%"></div>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:700; color:var(--text-dim);">
-                            <span>OBJETIVO: ${formatTime(task.goalSeconds).substring(0,5)}</span>
+                        <div class="progress-track"><div id="fill-${task.id}" class="progress-fill" style="width:${perc}%"></div></div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:var(--text-dim);">
+                            <span>META: ${formatTime(task.goalSeconds).substring(0,5)}</span>
                             <span>FEITO: ${formatTime(task.elapsedSeconds)}</span>
                         </div>
                     </div>`;
             });
-            save();
+            updateTotal();
+        }
+        function updateTotal() {
+            const total = tasks.reduce((acc, t) => acc + t.elapsedSeconds, 0);
+            document.getElementById('total-net').innerText = formatTime(total);
         }
         renderTasks();
     </script>
