@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#03080a">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
     <title>00:00:00</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -18,9 +21,9 @@
                               linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
             background-size: 30px 30px;
             user-select: none; -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
         }
 
-        /* HUD Header */
         .hud-header {
             border-bottom: 2px solid var(--neon); padding: 12px 20px;
             display: flex; justify-content: space-between; align-items: center;
@@ -32,7 +35,6 @@
 
         .container { max-width: 1000px; margin: 0 auto; padding: 25px 15px; }
 
-        /* Timer Central - Ajuste Mobile */
         .timer-unit {
             background: var(--card-bg); border: 1px solid var(--border);
             padding: 50px 10px; text-align: center; position: relative;
@@ -44,7 +46,6 @@
         #display { font-size: clamp(2.8rem, 14vw, 5.8rem); font-weight: 700; color: var(--neon); text-shadow: 0 0 25px rgba(0,242,255,0.4); margin: 15px 0; }
         #current-mission { font-size: 11px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; font-weight: bold; }
 
-        /* Painel de Controle */
         .control-panel {
             background: rgba(0,0,0,0.6); border: 1px solid var(--border);
             display: grid; grid-template-columns: 1fr 160px 60px; gap: 10px; padding: 18px; margin-bottom: 40px;
@@ -62,7 +63,6 @@
         }
         .btn-tactical:active { background: var(--neon); color: black; transform: scale(0.98); }
 
-        /* Lista de Missões */
         .mission-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
 
         .mission-card {
@@ -73,9 +73,8 @@
         .mission-card.completed { opacity: 0.25; filter: grayscale(1); border-style: dotted; }
 
         .progress-bar { height: 3px; background: rgba(0,242,255,0.08); margin: 15px 0; border-radius: 2px; }
-        .progress-fill { height: 100%; background: var(--neon); width: 0%; box-shadow: 0 0 10px var(--neon); transition: width 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
+        .progress-fill { height: 100%; background: var(--neon); width: 0%; box-shadow: 0 0 10px var(--neon); transition: width 0.4s; }
 
-        /* Modal Operacional */
         .modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.96);
             display: none; align-items: center; justify-content: center; z-index: 2000;
@@ -85,7 +84,6 @@
             width: 88%; max-width: 400px; text-align: center;
         }
 
-        /* Fab Lixeira Direita */
         .fab-container { position: fixed; bottom: 25px; right: 25px; z-index: 150; }
 
         @media (max-width: 650px) {
@@ -100,11 +98,11 @@
 
     <div id="modal" class="modal">
         <div class="modal-content">
-            <div id="modal-title" style="color: var(--neon); font-weight: bold; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">Atenção Unidade</div>
+            <div id="modal-title" style="color: var(--neon); font-weight: bold; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase;">AVISO_SISTEMA</div>
             <p id="modal-text" style="font-size: 13px; margin-bottom: 25px; color: var(--text); line-height: 1.6;"></p>
             <div style="display: flex; gap: 12px;">
-                <button class="btn-tactical" style="flex:1; padding: 16px;" onclick="closeModal()">ABORTAR</button>
-                <button id="modal-confirm-btn" class="btn-tactical" style="flex:1; background: var(--neon); color: black; padding: 16px;">EXECUTAR</button>
+                <button class="btn-tactical" style="flex:1; padding: 16px;" onclick="closeModal()">CANCELAR</button>
+                <button id="modal-confirm-btn" class="btn-tactical" style="flex:1; background: var(--neon); color: black; padding: 16px;">CONFIRMAR</button>
             </div>
         </div>
     </div>
@@ -122,7 +120,7 @@
 
     <div class="container">
         <div class="timer-unit">
-            <div id="current-mission">NENHUMA_UNIDADE_SELECIONADA</div>
+            <div id="current-mission">PRONTO_PARA_INÍCIO</div>
             <div id="display">00:00:00</div>
             <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
                 <button class="btn-tactical" style="width: 85px; height: 48px;" onclick="confirmReset()">RESET</button>
@@ -132,7 +130,7 @@
         </div>
 
         <div class="control-panel">
-            <input type="text" id="task-name" placeholder="DISCIPLINA / MISSÃO">
+            <input type="text" id="task-name" placeholder="DISCIPLINA">
             <input type="text" id="task-time" placeholder="00:00:00" maxlength="8">
             <button class="btn-tactical" onclick="createTask()" style="font-size: 24px;">+</button>
         </div>
@@ -141,12 +139,13 @@
     </div>
 
     <div class="fab-container">
-        <button class="btn-tactical" style="width: 50px; height: 50px; border-radius: 50%; font-size: 18px;" onclick="confirmClearAll()" title="Zerar Sistema">🗑️</button>
+        <button class="btn-tactical" style="width: 50px; height: 50px; border-radius: 50%; font-size: 18px;" onclick="confirmClearAll()">🗑️</button>
     </div>
 
     <script>
         let timer, seconds = 0, activeTaskId = null, tasks = JSON.parse(localStorage.getItem('study_tasks')) || [];
         
+        // --- AUDIO & HAPTIC ENGINE ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playBeep(freq, duration, vol) {
             const osc = audioCtx.createOscillator();
@@ -156,13 +155,16 @@
             osc.start(); setTimeout(() => osc.stop(), duration);
         }
 
+        function vibrate(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
+
         const sounds = {
-            start: () => { playBeep(880, 50, 0.1); setTimeout(() => playBeep(1046, 50, 0.1), 60); },
-            pause: () => { playBeep(440, 100, 0.1); },
-            click: () => { playBeep(1200, 20, 0.05); },
-            alert: () => { playBeep(220, 150, 0.1); playBeep(220, 150, 0.1); }
+            start: () => { playBeep(880, 50, 0.1); vibrate(40); },
+            pause: () => { playBeep(440, 100, 0.1); vibrate(20); },
+            click: () => { playBeep(1200, 20, 0.05); vibrate(10); },
+            alert: () => { playBeep(220, 150, 0.1); vibrate([50, 50, 50]); }
         };
 
+        // --- MASK & FULLSCREEN ---
         document.getElementById('task-time').addEventListener('input', e => {
             let v = e.target.value.replace(/\D/g, '');
             if (v.length > 4) v = v.substring(0,2) + ':' + v.substring(2,4) + ':' + v.substring(4,6);
@@ -180,6 +182,7 @@
             }
         }
 
+        // --- MODAL ENGINE ---
         function openModal(title, text, onConfirm) {
             sounds.alert();
             document.getElementById('modal-title').innerText = title;
@@ -188,8 +191,9 @@
             btn.onclick = () => { onConfirm(); closeModal(); };
             document.getElementById('modal').style.display = 'flex';
         }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; sounds.click(); }
 
+        // --- CORE LOGIC ---
         function formatTime(s) {
             const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
             return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
@@ -202,9 +206,9 @@
         }
 
         function createTask() {
-            sounds.click();
             const name = document.getElementById('task-name').value, timeStr = document.getElementById('task-time').value;
             if (!name || !timeStr) return;
+            sounds.click();
             const parts = timeStr.split(':').map(Number);
             let total = 0;
             if (parts.length === 3) total = (parts[0]*3600) + (parts[1]*60) + parts[2];
@@ -222,7 +226,7 @@
             if (timer) pause();
             activeTaskId = id; seconds = task.elapsedSeconds;
             document.getElementById('current-mission').innerText = "OP_ATIVA: " + task.name;
-            document.getElementById('op-tag').innerText = "DEPLOYED";
+            document.getElementById('op-tag').innerText = "READY";
             updateDisplay(); renderTasks();
         }
 
@@ -255,13 +259,13 @@
 
         function confirmReset() {
             if (!activeTaskId) return;
-            openModal("SISTEMA_RESET", "CONFIRMAR REINICIALIZAÇÃO DOS DADOS DE TEMPO DESTA UNIDADE?", () => {
+            openModal("SISTEMA_RESET", "CONFIRMAR REINICIALIZAÇÃO DO CRONÔMETRO?", () => {
                 pause(); seconds = 0; updateDisplay(); renderTasks();
             });
         }
 
         function confirmClearAll() {
-            openModal("PURGE_GERAL", "CONFIRMAR DELEÇÃO DE TODOS OS REGISTROS OPERACIONAIS DO DIA?", () => {
+            openModal("PURGE_DATA", "APAGAR TODOS OS REGISTROS DO BANCO DE DADOS?", () => {
                 pause(); tasks = []; activeTaskId = null; seconds = 0;
                 localStorage.removeItem('study_tasks');
                 renderTasks();
