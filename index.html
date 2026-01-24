@@ -3,145 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>DIÁRIO DE BORDO - QG TÁTICO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <title>DIÁRIO DE BORDO - Elite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-page: #080a0b;
-            --panel-bg: rgba(21, 28, 30, 0.8);
-            --accent: #00ff88; /* Verde Neon mais vivo */
-            --accent-gradient: linear-gradient(135deg, #00ff88 0%, #00bd65 100%);
-            --text-main: #ffffff;
+            --bg: #0d0f10;
+            --card: #16191b;
+            --text: #ffffff;
             --text-dim: #94a3b8;
-            --danger: #ff4757;
-            --card-border: rgba(255, 255, 255, 0.05);
+            --accent: #38b000;
+            --border: rgba(255,255,255,0.08);
+            --bar-bg: rgba(255,255,255,0.05);
         }
 
         body.light-mode {
-            --bg-page: #f8fafc;
-            --panel-bg: rgba(255, 255, 255, 0.9);
-            --accent: #2563eb; /* Azul Royal */
-            --accent-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            --text-main: #0f172a;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
             --text-dim: #64748b;
-            --card-border: rgba(0, 0, 0, 0.05);
+            --accent: #2563eb;
+            --border: rgba(0,0,0,0.1);
+            --bar-bg: rgba(0,0,0,0.05);
         }
 
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.25s; }
 
         body {
-            background-color: var(--bg-page);
-            color: var(--text-main);
-            margin: 0; padding: 20px;
-            display: flex; flex-direction: column; align-items: center;
+            background-color: var(--bg); color: var(--text);
+            margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
         }
 
-        /* Status Global - Estilo Dashboard */
-        .glass-panel {
-            background: var(--panel-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            width: 100%; max-width: 480px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        /* Barra de Horas Líquidas Superior (Suave) */
+        .top-stats-bar {
+            width: 100%; padding: 8px 20px; background: var(--card);
+            border-bottom: 1px solid var(--border); display: flex;
+            justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
         }
+        .net-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-dim); letter-spacing: 1px; }
+        .net-value { font-size: 14px; font-weight: 600; color: var(--accent); font-family: monospace; }
 
-        .stats-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
-        .stats-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); }
-        .stats-time { font-size: 32px; font-weight: 300; letter-spacing: -1px; }
+        .container { width: 100%; max-width: 420px; padding: 20px; text-align: center; }
 
-        /* Timer Principal */
-        .timer-hero { text-align: center; margin: 20px 0; }
-        .timer-focus-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 4px; margin-bottom: 10px; display: block; }
-        #display { 
-            font-size: 72px; font-weight: 200; margin: 10px 0; 
-            font-variant-numeric: tabular-nums; 
-            background: var(--text-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .app-title { font-size: 18px; font-weight: 800; letter-spacing: 2px; margin-bottom: 30px; color: var(--text); }
+        .app-title span { color: var(--accent); }
 
-        /* Botões de Comando */
-        .control-dock { 
-            display: flex; gap: 15px; justify-content: center; 
-            background: rgba(255,255,255,0.03); padding: 15px; border-radius: 50px;
-            border: 1px solid var(--card-border);
-        }
-        .cmd-btn {
-            width: 50px; height: 50px; border-radius: 50%; border: none;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: white;
-        }
-        .btn-start { background: var(--accent-gradient); box-shadow: 0 10px 20px rgba(0, 255, 136, 0.2); }
-        .btn-pause { background: #1e293b; border: 1px solid var(--card-border); }
+        /* Timer de Foco */
+        .timer-section { margin-bottom: 30px; }
+        #current-mission { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 5px; }
+        #display { font-size: 64px; font-weight: 400; letter-spacing: -2px; margin: 10px 0; color: var(--text); }
 
-        /* Cards de Missão */
-        .task-list { width: 100%; max-width: 480px; }
-        .mission-card {
-            background: var(--panel-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px; padding: 20px; margin-bottom: 12px;
-            cursor: pointer; position: relative;
+        .controls { display: flex; gap: 12px; justify-content: center; margin-top: 15px; }
+        .btn-cmd { 
+            width: 50px; height: 50px; border-radius: 15px; border: 1px solid var(--border);
+            background: var(--card); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
-        .mission-card.active { border-color: var(--accent); background: rgba(0, 255, 136, 0.03); }
-        
-        .progress-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 15px 0; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--accent-gradient); width: 0%; transition: width 1s ease; }
+        .btn-cmd.play { background: var(--accent); color: white; border: none; }
 
-        /* Input Minimalista */
-        .input-box {
-            display: flex; gap: 10px; width: 100%; max-width: 480px; margin-bottom: 25px;
+        /* Criação de Disciplina */
+        .add-box { display: grid; grid-template-columns: 1fr 70px 50px; gap: 8px; margin-bottom: 25px; }
+        input { 
+            background: var(--card); border: 1px solid var(--border); padding: 12px; 
+            border-radius: 12px; color: var(--text); font-size: 14px; outline: none;
         }
-        .input-box input {
-            background: var(--panel-bg); border: 1px solid var(--card-border);
-            padding: 15px; border-radius: 15px; color: white; flex: 1; outline: none;
-        }
-        .btn-add { background: var(--accent-gradient); border: none; border-radius: 15px; width: 55px; color: white; cursor: pointer; font-size: 24px; }
+        input::placeholder { color: var(--text-dim); }
+        .btn-plus { background: var(--accent); border: none; border-radius: 12px; color: white; cursor: pointer; font-size: 20px; }
 
-        /* Botão Flutuante */
-        .fab-dock { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; }
-        .fab { width: 55px; height: 55px; border-radius: 20px; border: none; color: white; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        /* Lista de Missões */
+        .task-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 15px; margin-bottom: 10px; text-align: left; position: relative; cursor: pointer;
+        }
+        .task-card.active { border-color: var(--accent); box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .task-card h4 { margin: 0; font-size: 14px; text-transform: uppercase; color: var(--text); }
+
+        .progress-container { height: 4px; background: var(--bar-bg); border-radius: 2px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; }
+
+        .task-footer { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: var(--text-dim); }
+
+        /* Floating Buttons */
+        .fab-group { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .fab { 
+            width: 45px; height: 45px; border-radius: 50%; border: none; color: white;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
 
     </style>
 </head>
 <body>
 
-    <div class="glass-panel">
-        <div class="stats-header">
-            <span class="stats-label">Horas Líquidas Totais</span>
-            <span class="stats-time" id="total-net">00:00:00</span>
+    <div class="top-stats-bar">
+        <span class="net-label">Líquidas Hoje</span>
+        <span class="net-value" id="total-net">00:00:00</span>
+    </div>
+
+    <div class="container">
+        <h1 class="app-title">DIÁRIO DE <span>BORDO</span></h1>
+
+        <div class="timer-section">
+            <span id="current-mission">Selecione uma Missão</span>
+            <div id="display">00:00:00</div>
+            <div class="controls">
+                <button class="btn-cmd" onclick="reset()">⟲</button>
+                <button class="btn-cmd play" onclick="start()">▶</button>
+                <button class="btn-cmd" onclick="pause()">❙❙</button>
+            </div>
         </div>
-        <div class="progress-track" style="height: 2px;"><div class="progress-bar" id="global-progress" style="width: 0%"></div></div>
-    </div>
 
-    <div class="timer-hero">
-        <span class="timer-focus-label" id="current-mission">Em Espera</span>
-        <div id="display">00:00:00</div>
-        
-        <div class="control-dock">
-            <button class="cmd-btn" style="color: var(--text-dim);" onclick="reset()">⟲</button>
-            <button class="cmd-btn btn-start" onclick="start()">▶</button>
-            <button class="cmd-btn btn-pause" onclick="pause()">❙❙</button>
+        <div class="add-box">
+            <input type="text" id="task-name" placeholder="Matéria">
+            <input type="number" id="task-goal" placeholder="Min">
+            <button class="btn-plus" onclick="createTask()">+</button>
         </div>
+
+        <div id="task-list"></div>
     </div>
 
-    <div class="input-box">
-        <input type="text" id="task-name" placeholder="Nova Disciplina...">
-        <input type="number" id="task-goal" placeholder="Min" style="max-width: 80px;">
-        <button class="btn-add" onclick="createTask()">+</button>
-    </div>
-
-    <div id="task-list" class="task-list"></div>
-
-    <div class="fab-dock">
-        <button class="fab" style="background: var(--danger)" onclick="clearAll()">🗑️</button>
-        <button class="fab" style="background: var(--accent-gradient)" onclick="toggleTheme()" id="theme-icon">☀️</button>
+    <div class="fab-group">
+        <button class="fab" style="background: #ef4444;" onclick="clearAll()">🗑️</button>
+        <button class="fab" style="background: var(--accent);" onclick="toggleTheme()" id="theme-btn">☀️</button>
     </div>
 
     <script>
-        // ... (Lógica de JS idêntica à anterior para manter funcionalidade) ...
         let timer;
         let seconds = 0;
         let tasks = JSON.parse(localStorage.getItem('study_tasks')) || [];
@@ -150,14 +134,15 @@
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
-            document.getElementById('theme-icon').innerText = isLight ? '🌙' : '☀️';
+            document.getElementById('theme-btn').innerText = isLight ? '🌙' : '☀️';
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
         }
         if(localStorage.getItem('theme') === 'light') toggleTheme();
 
         function save() { 
             localStorage.setItem('study_tasks', JSON.stringify(tasks)); 
-            updateGlobal();
+            const total = tasks.reduce((acc, t) => acc + t.elapsedSeconds, 0);
+            document.getElementById('total-net').innerText = formatTime(total);
         }
 
         function formatTime(s) {
@@ -165,14 +150,6 @@
             const m = Math.floor((s % 3600) / 60);
             const sec = s % 60;
             return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-        }
-
-        function updateGlobal() {
-            const total = tasks.reduce((acc, t) => acc + t.elapsedSeconds, 0);
-            const goalTotal = tasks.reduce((acc, t) => acc + t.goalSeconds, 0);
-            document.getElementById('total-net').innerText = formatTime(total);
-            const perc = goalTotal > 0 ? (total / goalTotal) * 100 : 0;
-            document.getElementById('global-progress').style.width = Math.min(perc, 100) + '%';
         }
 
         function createTask() {
@@ -200,11 +177,13 @@
                 const task = tasks.find(t => t.id === activeTaskId);
                 task.elapsedSeconds = seconds;
                 save();
-                const bar = document.getElementById(`bar-${activeTaskId}`);
+                const fill = document.getElementById(`fill-${activeTaskId}`);
                 const pText = document.getElementById(`perc-${activeTaskId}`);
                 const p = Math.min((task.elapsedSeconds / task.goalSeconds) * 100, 100).toFixed(0);
-                if(bar) bar.style.width = p + '%';
+                if(fill) fill.style.width = p + '%';
                 if(pText) pText.innerText = p + '%';
+                const totalText = document.getElementById(`total-${activeTaskId}`);
+                if(totalText) totalText.innerText = 'FEITO: ' + formatTime(task.elapsedSeconds);
             }
         }
 
@@ -216,16 +195,17 @@
         function pause() { clearInterval(timer); timer = null; }
 
         function reset() {
-            if (!activeTaskId || !confirm("Reiniciar?")) return;
+            if (!activeTaskId || !confirm("Reiniciar cronômetro?")) return;
             pause(); seconds = 0; updateDisplay(); renderTasks();
         }
 
         function clearAll() {
-            if (confirm("Zerar Diário?")) {
+            if (confirm("Apagar todos os registros do dia?")) {
                 pause(); tasks = []; activeTaskId = null; seconds = 0;
                 localStorage.removeItem('study_tasks');
-                renderTasks(); updateGlobal();
                 document.getElementById('display').innerText = "00:00:00";
+                document.getElementById('total-net').innerText = "00:00:00";
+                renderTasks();
             }
         }
 
@@ -235,19 +215,20 @@
             tasks.forEach(task => {
                 const perc = Math.min((task.elapsedSeconds / task.goalSeconds) * 100, 100).toFixed(0);
                 list.innerHTML += `
-                    <div class="mission-card ${task.id === activeTaskId ? 'active' : ''}" onclick="selectTask(${task.id})">
+                    <div class="task-card ${task.id === activeTaskId ? 'active' : ''}" onclick="selectTask(${task.id})">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:700; font-size:14px; letter-spacing:0.5px;">${task.name.toUpperCase()}</span>
+                            <h4>${task.name}</h4>
                             <span id="perc-${task.id}" style="color:var(--accent); font-weight:800; font-size:12px;">${perc}%</span>
                         </div>
-                        <div class="progress-track"><div id="bar-${task.id}" class="progress-bar" style="width:${perc}%"></div></div>
-                        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-dim);">
-                            <span>META: ${task.goalSeconds/60} MIN</span>
-                            <span>FEITO: ${formatTime(task.elapsedSeconds)}</span>
+                        <div class="progress-container"><div id="fill-${task.id}" class="progress-fill" style="width:${perc}%"></div></div>
+                        <div class="task-footer">
+                            <span>META: ${task.goalSeconds/60}M</span>
+                            <span id="total-${task.id}">FEITO: ${formatTime(task.elapsedSeconds)}</span>
                         </div>
                     </div>`;
             });
-            updateGlobal();
+            const total = tasks.reduce((acc, t) => acc + t.elapsedSeconds, 0);
+            document.getElementById('total-net').innerText = formatTime(total);
         }
         renderTasks();
     </script>
