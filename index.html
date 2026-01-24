@@ -2,142 +2,139 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tempo & Foco</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>DP - Foco & Missão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-page: #FDFBF7;
-            --bg-card: #FFFFFF;
-            --text-title: #4A3F35;
-            --text-body: #6B5E53;
-            --accent-mint: #D4E9E2;
-            --accent-mint-dark: #A8D5BA;
-            --accent-peach: #F9E2D2;
-            --border-color: #E8E2D9;
-            --danger: #FFBABD;
-            --success-gold: #FFD700;
-            --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 4px rgba(0, 0, 0, 0.02);
-            --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.04);
+            /* Modo Escuro (Padrão) */
+            --bg-page: #0b1011;
+            --bg-card: #151c1e;
+            --text-title: #ffffff;
+            --text-body: #cbd5e1;
+            --accent-primary: #38b000; /* Verde Neon */
+            --border-color: #334144;
+            --input-bg: #0b1011;
+            --shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Ajuste Global para evitar estouro de tela */
-        * { box-sizing: border-box; }
+        /* Classe para Modo Claro */
+        body.light-mode {
+            --bg-page: #f0f2f5;
+            --bg-card: #ffffff;
+            --text-title: #1a202c;
+            --text-body: #4a5568;
+            --accent-primary: #2b6cb0; /* Azul Policial */
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        * { box-sizing: border-box; font-family: 'Quicksand', sans-serif; transition: background 0.3s, color 0.3s; }
 
         body {
             background-color: var(--bg-page);
             color: var(--text-body);
-            font-family: 'Inter', -apple-system, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px; /* Reduzi para dar mais espaço no celular */
+            padding: 15px;
         }
 
-        .header-container { text-align: center; margin-bottom: 30px; margin-top: 10px; }
-        .app-title { font-size: 26px; font-weight: 300; color: var(--text-title); letter-spacing: 3px; margin: 0; text-transform: uppercase; }
-        .app-title span { font-weight: 800; color: var(--accent-mint-dark); }
+        .header-container { text-align: center; margin: 20px 0; }
+        .app-title { font-size: 24px; font-weight: 800; color: var(--text-title); text-transform: uppercase; letter-spacing: 2px; }
+        .app-title span { color: var(--accent-primary); }
 
-        /* Timer Principal Adaptável */
+        /* Timer Principal */
         .main-timer {
             background: var(--bg-card);
-            padding: 35px 20px;
-            border-radius: 40px;
-            box-shadow: var(--shadow-soft);
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
             width: 100%;
-            max-width: 480px;
+            max-width: 450px;
             text-align: center;
-            margin-bottom: 25px;
-            transition: all 0.3s ease;
+            margin-bottom: 20px;
         }
 
-        #current-task-display { font-size: 11px; font-weight: 700; color: var(--accent-mint-dark); text-transform: uppercase; letter-spacing: 2px; }
+        #current-task-display { 
+            font-size: 11px; font-weight: 800; color: var(--accent-primary); 
+            text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 10px;
+        }
         
-        /* Fonte do Cronômetro Fluida */
         #display { 
-            font-size: 16vw; /* Ajusta conforme a largura da tela */
-            font-weight: 200; 
-            color: var(--text-title); 
-            margin: 15px 0; 
-            font-family: 'JetBrains Mono', monospace; 
-            font-variant-numeric: tabular-nums; 
-            line-height: 1;
+            font-size: 64px; font-weight: 200; color: var(--text-title); 
+            margin: 10px 0; font-family: 'Courier New', monospace;
         }
 
-        /* Trava o tamanho em telas grandes */
-        @media (min-width: 500px) {
-            #display { font-size: 80px; }
-            .app-title { font-size: 32px; }
-            .main-timer { padding: 50px 40px; }
+        .btn-group { display: flex; gap: 15px; justify-content: center; }
+        .icon-btn { 
+            width: 55px; height: 55px; border-radius: 50%; border: none; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            font-size: 20px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .btn-play { background: var(--accent-primary); color: white; }
+        .btn-pause { background: #ffb703; color: #000; }
+        .btn-reset { background: transparent; color: var(--text-body); border: 1px solid var(--border-color); }
+
+        /* Botão Flutuante Dark/Light */
+        .theme-toggle {
+            position: fixed; bottom: 25px; right: 25px;
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--accent-primary); color: white;
+            border: none; cursor: pointer; font-size: 24px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000;
         }
 
-        .btn-group { display: flex; gap: 12px; justify-content: center; align-items: center; }
-        .icon-btn { width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s; }
-        .icon-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
-        .btn-play { background: var(--accent-mint); color: #2D4A3E; }
-        .btn-pause { background: var(--accent-peach); color: #6E4B31; }
-        .btn-reset { background: transparent; color: #A0968D; border: 1px solid var(--border-color); font-size: 22px; }
-
-        /* Container de Criação */
+        /* Inputs */
         .creation-container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--bg-card);
-            padding: 25px;
-            border-radius: 25px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 25px;
-            box-shadow: var(--shadow-soft);
+            width: 100%; max-width: 450px; background: var(--bg-card);
+            padding: 20px; border-radius: 20px; border: 1px solid var(--border-color);
+            margin-bottom: 20px; box-shadow: var(--shadow);
         }
 
-        .input-row { display: flex; flex-direction: column; gap: 15px; }
-        
-        /* Ajuste para Desktop */
-        @media (min-width: 480px) {
-            .input-row { display: grid; grid-template-columns: 2fr 1fr 54px; gap: 12px; align-items: end; }
+        .input-row { display: grid; grid-template-columns: 1fr 80px 50px; gap: 10px; }
+        label { font-size: 10px; font-weight: 800; color: var(--accent-primary); text-transform: uppercase; margin-bottom: 5px; display: block; }
+        input { 
+            background: var(--input-bg); border: 1px solid var(--border-color); 
+            padding: 12px; border-radius: 10px; color: var(--text-title); outline: none; width: 100%;
         }
 
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-size: 11px; font-weight: 800; color: #A0968D; text-transform: uppercase; letter-spacing: 1px; }
-        input { border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; outline: none; background: #FAFAFA; font-size: 16px; width: 100%; color: var(--text-body); }
+        .btn-add-plus { 
+            background: var(--accent-primary); border: none; border-radius: 10px; 
+            color: white; font-size: 20px; font-weight: 800; cursor: pointer;
+        }
 
-        .btn-add-plus { height: 48px; background: var(--accent-mint); color: #2D4A3E; border: none; border-radius: 12px; font-size: 24px; cursor: pointer; transition: 0.2s; }
-
-        /* Cards de Tarefas */
-        .tasks-container { width: 100%; max-width: 480px; }
+        /* Lista de Matérias */
+        .tasks-container { width: 100%; max-width: 450px; }
         .task-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            position: relative;
-            box-shadow: var(--shadow-soft);
-            transition: all 0.3s ease;
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 18px; padding: 15px; margin-bottom: 12px;
+            cursor: pointer; position: relative; transition: 0.3s; box-shadow: var(--shadow);
         }
-        .task-card.active { border: 2px solid var(--accent-mint-dark); background: #F9FEFC; }
-        .task-card.completed { border: 2px solid var(--success-gold); }
+        .task-card.active { border-color: var(--accent-primary); border-width: 2px; }
+        .btn-delete { position: absolute; top: 10px; right: 10px; background: rgba(255,0,0,0.1); color: #ff4d4d; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; }
 
-        .btn-delete { position: absolute; top: 12px; right: 12px; background: #fdf2f2; color: #e57373; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; }
-
-        .progress-bg { height: 6px; background: #F0F0F0; border-radius: 10px; margin: 15px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent-mint-dark); transition: width 0.6s ease; }
-        .completed .progress-fill { background: var(--success-gold); }
-
-        .task-meta { display: flex; justify-content: space-between; font-size: 12px; font-weight: 500; color: #A0968D; }
+        .progress-bg { height: 8px; background: rgba(0,0,0,0.1); border-radius: 10px; margin: 12px 0; overflow: hidden;}
+        .progress-fill { height: 100%; background: var(--accent-primary); border-radius: 10px; transition: 0.5s; }
+        .task-meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; }
     </style>
 </head>
 <body>
 
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">☀️</button>
+
     <div class="header-container">
-        <h1 class="app-title">Tempo <span>&</span> Foco</h1>
+        <h1 class="app-title">MISSÃO <span>&</span> FOCO</h1>
     </div>
 
     <div class="main-timer">
-        <span id="current-task-display">Defina seu foco</span>
+        <span id="current-task-display">AGUARDANDO DESIGNAÇÃO</span>
         <div id="display">00:00:00</div>
         <div class="btn-group">
             <button class="icon-btn btn-reset" onclick="reset()">⟲</button>
@@ -147,15 +144,10 @@
     </div>
 
     <div class="creation-container">
+        <label>Disciplina de Estudo</label>
         <div class="input-row">
-            <div class="input-group">
-                <label>Matéria / Projeto</label>
-                <input type="text" id="task-name" placeholder="Ex: Direito">
-            </div>
-            <div class="input-group">
-                <label>Meta (min)</label>
-                <input type="number" id="task-goal" placeholder="60">
-            </div>
+            <input type="text" id="task-name" placeholder="Ex: Informática">
+            <input type="number" id="task-goal" placeholder="Min">
             <button class="btn-add-plus" onclick="createTask()">+</button>
         </div>
     </div>
@@ -165,12 +157,22 @@
     <script>
         let timer;
         let seconds = 0;
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let tasks = JSON.parse(localStorage.getItem('study_tasks')) || [];
         let activeTaskId = null;
 
-        renderTasks();
+        // Função de alternar tema
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('theme-icon').innerText = isLight ? '🌙' : '☀️';
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        }
 
-        function save() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
+        // Carregar tema salvo
+        if(localStorage.getItem('theme') === 'light') toggleTheme();
+
+        function save() { localStorage.setItem('study_tasks', JSON.stringify(tasks)); }
+        
         function formatTime(s) {
             const h = Math.floor(s / 3600);
             const m = Math.floor((s % 3600) / 60);
@@ -182,20 +184,10 @@
             const name = document.getElementById('task-name').value;
             const goal = document.getElementById('task-goal').value;
             if (!name || !goal) return;
-            const newTask = { id: Date.now(), name, goalSeconds: goal * 60, elapsedSeconds: 0 };
-            tasks.push(newTask);
+            tasks.push({ id: Date.now(), name, goalSeconds: goal * 60, elapsedSeconds: 0 });
             document.getElementById('task-name').value = '';
             document.getElementById('task-goal').value = '';
-            save();
-            renderTasks();
-        }
-
-        function deleteTask(e, id) {
-            e.stopPropagation();
-            if (activeTaskId === id) { pause(); activeTaskId = null; seconds = 0; document.getElementById('current-task-display').innerText = "Defina seu foco"; updateDisplay(); }
-            tasks = tasks.filter(t => t.id !== id);
-            save();
-            renderTasks();
+            save(); renderTasks();
         }
 
         function selectTask(id) {
@@ -204,63 +196,58 @@
             const task = tasks.find(t => t.id === id);
             seconds = task.elapsedSeconds;
             document.getElementById('current-task-display').innerText = task.name;
-            updateDisplay();
-            renderTasks();
+            updateDisplay(); renderTasks();
         }
 
         function updateDisplay() {
-            const ts = formatTime(seconds);
-            document.getElementById('display').innerText = ts;
-            document.title = ts;
+            document.getElementById('display').innerText = formatTime(seconds);
             if (activeTaskId) {
                 const task = tasks.find(t => t.id === activeTaskId);
                 task.elapsedSeconds = seconds;
-                save();
-                renderTasks();
+                save(); renderTasks();
             }
         }
 
         function start() {
-            if (!activeTaskId) { alert("Selecione um módulo abaixo."); return; }
-            if (!timer) { timer = setInterval(() => { seconds++; updateDisplay(); }, 1000); }
+            if (!activeTaskId) return;
+            if (!timer) timer = setInterval(() => { seconds++; updateDisplay(); }, 1000);
         }
 
         function pause() { clearInterval(timer); timer = null; }
 
         function reset() {
-            if (!activeTaskId) return;
-            if (confirm("Resetar tempo da sessão?")) { 
-                pause(); seconds = 0; 
-                const task = tasks.find(t => t.id === activeTaskId);
-                task.elapsedSeconds = 0;
-                save(); updateDisplay(); 
-            }
+            if (!activeTaskId || !confirm("Reiniciar tempo?")) return;
+            pause(); seconds = 0; updateDisplay();
+        }
+
+        function deleteTask(e, id) {
+            e.stopPropagation();
+            tasks = tasks.filter(t => t.id !== id);
+            if(activeTaskId === id) { activeTaskId = null; seconds = 0; document.getElementById('display').innerText = "00:00:00"; }
+            save(); renderTasks();
         }
 
         function renderTasks() {
             const list = document.getElementById('task-list');
             list.innerHTML = '';
             tasks.forEach(task => {
-                const progressNum = (task.elapsedSeconds / task.goalSeconds) * 100;
-                const progress = Math.min(progressNum, 100).toFixed(0);
-                const isActive = task.id === activeTaskId;
-                const isCompleted = progressNum >= 100;
-
+                const perc = Math.min((task.elapsedSeconds / task.goalSeconds) * 100, 100).toFixed(0);
                 list.innerHTML += `
-                    <div class="task-card ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" onclick="selectTask(${task.id})">
+                    <div class="task-card ${task.id === activeTaskId ? 'active' : ''}" onclick="selectTask(${task.id})">
                         <button class="btn-delete" onclick="deleteTask(event, ${task.id})">✕</button>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 30px;">
-                            <strong style="color: var(--text-title);">${task.name}</strong>
-                            <span style="color: ${isCompleted ? 'var(--success-gold)' : 'var(--accent-mint-dark)'}; font-weight: 800; font-size: 13px;">${progress}%</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong style="color:var(--text-title); font-size:14px;">${task.name.toUpperCase()}</strong>
+                            <span style="color:var(--accent-primary); font-weight:800;">${perc}%</span>
                         </div>
-                        <div class="progress-bg"><div class="progress-fill" style="width: ${progress}%"></div></div>
+                        <div class="progress-bg"><div class="progress-fill" style="width:${perc}%"></div></div>
                         <div class="task-meta">
-                            <span>Meta: ${task.goalSeconds / 60}m</span>
-                            <span>Total: ${formatTime(task.elapsedSeconds)}</span>
+                            <span>META: ${task.goalSeconds/60}m</span>
+                            <span>TOTAL: ${formatTime(task.elapsedSeconds)}</span>
                         </div>
                     </div>`;
             });
         }
+        renderTasks();
     </script>
 </body>
 </html>
