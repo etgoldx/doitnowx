@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>DIÁRIO DE BORDO</title>
+    <title>DIÁRIO DE BORDO - Horas Líquidas</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,13 +11,14 @@
             --text-title: #ffffff; --text-body: #cbd5e1;
             --accent-primary: #38b000; --border-color: #334144;
             --input-bg: #0b1011; --danger: #9d0208;
+            --glow: rgba(56, 176, 0, 0.3);
         }
 
         body.light-mode {
             --bg-page: #f0f2f5; --bg-card: #ffffff;
             --text-title: #1a202c; --text-body: #4a5568;
             --accent-primary: #2b6cb0; --border-color: #e2e8f0;
-            --input-bg: #ffffff;
+            --input-bg: #ffffff; --glow: rgba(43, 108, 176, 0.2);
         }
 
         * { box-sizing: border-box; font-family: 'Quicksand', sans-serif; transition: 0.2s ease; -webkit-tap-highlight-color: transparent; }
@@ -25,60 +26,75 @@
         body {
             background-color: var(--bg-page); color: var(--text-body);
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; margin: 0; padding: 15px; padding-bottom: 120px;
+            min-height: 100vh; margin: 0; padding: 10px; padding-bottom: 120px;
         }
 
-        .header-container { text-align: center; margin: 20px 0; }
-        .app-title { font-size: 1.5rem; font-weight: 800; color: var(--text-title); text-transform: uppercase; letter-spacing: 3px; }
+        /* Painel de Horas Líquidas (Global) */
+        .global-stats {
+            width: 100%; max-width: 450px; background: var(--bg-card);
+            padding: 15px 20px; border-radius: 20px; border: 1px solid var(--accent-primary);
+            margin-bottom: 15px; box-shadow: 0 0 15px var(--glow);
+        }
+        .stats-row { display: flex; justify-content: space-between; align-items: center; }
+        .stats-label { font-size: 10px; font-weight: 800; color: var(--accent-primary); text-transform: uppercase; }
+        .stats-value { font-size: 18px; font-weight: 800; color: var(--text-title); font-family: monospace; }
+
+        .header-container { text-align: center; margin: 10px 0; }
+        .app-title { font-size: 1.3rem; font-weight: 800; color: var(--text-title); text-transform: uppercase; letter-spacing: 2px; }
         .app-title span { color: var(--accent-primary); }
 
-        /* Timer Principal Otimizado para Mobile */
         .main-timer {
-            background: var(--bg-card); padding: 25px; border-radius: 30px;
+            background: var(--bg-card); padding: 20px; border-radius: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid var(--border-color);
-            width: 100%; max-width: 450px; text-align: center; margin-bottom: 20px;
+            width: 100%; max-width: 450px; text-align: center; margin-bottom: 15px;
         }
 
-        #current-task-display { font-size: 10px; font-weight: 800; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 2px; }
-        #display { font-size: clamp(3rem, 15vw, 4.5rem); font-weight: 200; color: var(--text-title); margin: 10px 0; font-family: monospace; }
+        #current-task-display { font-size: 10px; font-weight: 800; color: var(--accent-primary); text-transform: uppercase; }
+        #display { font-size: clamp(2.5rem, 12vw, 4rem); font-weight: 200; color: var(--text-title); margin: 5px 0; font-family: monospace; }
 
-        .btn-group { display: flex; gap: 15px; justify-content: center; }
-        .icon-btn { width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .btn-play { background: var(--accent-primary); color: white; box-shadow: 0 4px 15px rgba(56, 176, 0, 0.4); }
+        .btn-group { display: flex; gap: 12px; justify-content: center; }
+        .icon-btn { width: 55px; height: 55px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .btn-play { background: var(--accent-primary); color: white; }
         .btn-pause { background: #ffb703; color: #000; }
         .btn-reset { background: transparent; color: var(--text-body); border: 1px solid var(--border-color); }
 
-        /* Botões Flutuantes */
-        .fab-container { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 15px; }
-        .fab { width: 55px; height: 55px; border-radius: 50%; border: none; color: white; font-size: 20px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+        .fab-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .fab { width: 50px; height: 50px; border-radius: 50%; border: none; color: white; font-size: 18px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
         .btn-theme { background: var(--accent-primary); }
         .btn-clear { background: var(--danger); }
 
-        /* Estilização dos Cards */
         .tasks-container { width: 100%; max-width: 450px; }
         .task-card {
             background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: 20px; padding: 18px; margin-bottom: 12px;
-            position: relative; overflow: hidden;
+            border-radius: 15px; padding: 15px; margin-bottom: 10px;
+            position: relative;
         }
-        .task-card.active { border: 2px solid var(--accent-primary); transform: translateY(-3px); }
-        .progress-bg { height: 8px; background: rgba(0,0,0,0.1); border-radius: 4px; margin: 12px 0; }
-        .progress-fill { height: 100%; background: var(--accent-primary); border-radius: 4px; }
+        .task-card.active { border-left: 5px solid var(--accent-primary); background: rgba(56, 176, 0, 0.05); }
         
-        .creation-container { width: 100%; max-width: 450px; margin-bottom: 20px; }
-        .input-row { display: grid; grid-template-columns: 1fr 80px 50px; gap: 8px; }
-        input { background: var(--bg-card); border: 1px solid var(--border-color); padding: 14px; border-radius: 12px; color: var(--text-title); width: 100%; outline: none; }
-        .btn-add { background: var(--accent-primary); border: none; border-radius: 12px; color: white; font-size: 22px; cursor: pointer; }
+        .creation-container { width: 100%; max-width: 450px; margin-bottom: 15px; }
+        .input-row { display: grid; grid-template-columns: 1fr 70px 45px; gap: 8px; }
+        input { background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; color: var(--text-title); width: 100%; outline: none; font-size: 14px; }
+        .btn-add { background: var(--accent-primary); border: none; border-radius: 10px; color: white; font-size: 20px; cursor: pointer; }
+
+        .progress-bg { height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent-primary); border-radius: 3px; }
     </style>
 </head>
 <body>
+
+    <div class="global-stats">
+        <div class="stats-row">
+            <span class="stats-label">📊 Horas Líquidas Totais</span>
+            <span class="stats-value" id="total-net-hours">00:00:00</span>
+        </div>
+    </div>
 
     <div class="header-container">
         <h1 class="app-title">DIÁRIO DE <span>BORDO</span></h1>
     </div>
 
     <div class="main-timer">
-        <span id="current-task-display">MISSÃO NÃO INICIADA</span>
+        <span id="current-task-display">AGUARDANDO MISSÃO</span>
         <div id="display">00:00:00</div>
         <div class="btn-group">
             <button class="icon-btn btn-reset" onclick="reset()">⟲</button>
@@ -89,7 +105,7 @@
 
     <div class="creation-container">
         <div class="input-row">
-            <input type="text" id="task-name" placeholder="Matéria">
+            <input type="text" id="task-name" placeholder="Ex: Penal">
             <input type="number" id="task-goal" placeholder="Min">
             <button class="btn-add" onclick="createTask()">+</button>
         </div>
@@ -116,13 +132,21 @@
         }
         if(localStorage.getItem('theme') === 'light') toggleTheme();
 
-        function save() { localStorage.setItem('study_tasks', JSON.stringify(tasks)); }
+        function save() { 
+            localStorage.setItem('study_tasks', JSON.stringify(tasks)); 
+            updateGlobalStats();
+        }
         
         function formatTime(s) {
             const h = Math.floor(s / 3600);
             const m = Math.floor((s % 3600) / 60);
             const sec = s % 60;
             return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+        }
+
+        function updateGlobalStats() {
+            const total = tasks.reduce((acc, t) => acc + t.elapsedSeconds, 0);
+            document.getElementById('total-net-hours').innerText = formatTime(total);
         }
 
         function createTask() {
@@ -149,32 +173,38 @@
             if (activeTaskId) {
                 const task = tasks.find(t => t.id === activeTaskId);
                 task.elapsedSeconds = seconds;
-                save(); renderTasks();
+                save(); 
+                // Renderização parcial para performance
+                const cardPerc = document.getElementById(`perc-${activeTaskId}`);
+                const cardFill = document.getElementById(`fill-${activeTaskId}`);
+                const cardTotal = document.getElementById(`total-${activeTaskId}`);
+                if(cardPerc) {
+                    const p = Math.min((task.elapsedSeconds / task.goalSeconds) * 100, 100).toFixed(0);
+                    cardPerc.innerText = p + '%';
+                    cardFill.style.width = p + '%';
+                    cardTotal.innerText = 'TOTAL: ' + formatTime(task.elapsedSeconds);
+                }
             }
         }
 
         function start() {
-            if (!activeTaskId) return alert("Selecione uma missão na lista!");
+            if (!activeTaskId) return;
             if (!timer) timer = setInterval(() => { seconds++; updateDisplay(); }, 1000);
         }
 
         function pause() { clearInterval(timer); timer = null; }
 
         function reset() {
-            if (!activeTaskId || !confirm("Reiniciar cronômetro?")) return;
-            pause(); seconds = 0; updateDisplay();
+            if (!activeTaskId || !confirm("Reiniciar tempo desta disciplina?")) return;
+            pause(); seconds = 0; updateDisplay(); renderTasks();
         }
 
         function clearAll() {
-            if (confirm("🚨 ATENÇÃO: Deseja apagar TODAS as matérias e zerar o Diário de Bordo?")) {
-                pause();
-                tasks = [];
-                activeTaskId = null;
-                seconds = 0;
+            if (confirm("🚨 APAGAR TUDO? Isto limpará as suas horas líquidas do dia.")) {
+                pause(); tasks = []; activeTaskId = null; seconds = 0;
                 localStorage.removeItem('study_tasks');
                 document.getElementById('display').innerText = "00:00:00";
-                document.getElementById('current-task-display').innerText = "MISSÃO NÃO INICIADA";
-                renderTasks();
+                updateGlobalStats(); renderTasks();
             }
         }
 
@@ -186,16 +216,17 @@
                 list.innerHTML += `
                     <div class="task-card ${task.id === activeTaskId ? 'active' : ''}" onclick="selectTask(${task.id})">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong style="color:var(--text-title);">${task.name.toUpperCase()}</strong>
-                            <span style="color:var(--accent-primary); font-weight:800;">${perc}%</span>
+                            <strong style="color:var(--text-title); font-size:13px;">${task.name.toUpperCase()}</strong>
+                            <span id="perc-${task.id}" style="color:var(--accent-primary); font-weight:800; font-size:12px;">${perc}%</span>
                         </div>
-                        <div class="progress-bg"><div class="progress-fill" style="width:${perc}%"></div></div>
-                        <div style="display:flex; justify-content:space-between; font-size:11px;">
+                        <div class="progress-bg"><div id="fill-${task.id}" class="progress-fill" style="width:${perc}%"></div></div>
+                        <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:700;">
                             <span>META: ${task.goalSeconds/60}m</span>
-                            <span>TOTAL: ${formatTime(task.elapsedSeconds)}</span>
+                            <span id="total-${task.id}">TOTAL: ${formatTime(task.elapsedSeconds)}</span>
                         </div>
                     </div>`;
             });
+            updateGlobalStats();
         }
         renderTasks();
     </script>
